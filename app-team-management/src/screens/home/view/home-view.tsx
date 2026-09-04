@@ -1,10 +1,14 @@
 import { Text, View } from 'react-native';
 
+import { homeStyles } from './styles';
+
 export const HomeView = () => {
+  const styles = homeStyles();
+
   return (
-    <View className="flex-1 items-center justify-center gap-2 bg-background p-4">
-      <Text className="text-2xl font-semibold text-text">Team Management</Text>
-      <Text className="text-base text-text-secondary">NativeWind configurado com sucesso.</Text>
+    <View className={styles.base()}>
+      <Text className={styles.title()}>Team Management</Text>
+      <Text className={styles.subtitle()}>NativeWind configurado com sucesso.</Text>
     </View>
   );
 };

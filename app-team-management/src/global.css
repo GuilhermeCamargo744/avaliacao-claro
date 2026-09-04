@@ -3,6 +3,13 @@
 @import 'tailwindcss/utilities.css';
 @import 'nativewind/theme';
 
+/**
+ * O scanner do Tailwind extrai cada palavra dos arquivos do projeto, então a prosa
+ * da documentação (ex: a lista de nomes proibidos de slot no AGENTS.md) gera regras
+ * CSS mortas. Markdown é documentação, não fonte de estilo.
+ */
+@source not '../**/*.md';
+
 :root {
   --font-display:
     Spline Sans, Inter, ui-sans-serif, system-ui, sans-serif, Apple Color Emoji, Segoe UI Emoji,
