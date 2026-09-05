@@ -12,6 +12,11 @@ export const teamCardStyles = tv({
       green: { avatar: 'text-team-green' },
       yellow: { avatar: 'text-team-yellow' },
       blue: { avatar: 'text-team-blue' },
+      purple: { avatar: 'text-team-purple' },
+      orange: { avatar: 'text-team-orange' },
+      pink: { avatar: 'text-team-pink' },
+      cyan: { avatar: 'text-team-cyan' },
+      red: { avatar: 'text-team-red' },
     },
   },
   defaultVariants: {

@@ -11,7 +11,7 @@ export const createNewTeamStyles = tv({
     title: 'text-2xl font-bold text-content',
     subtitle: 'text-base text-content-muted',
     form: 'gap-3 pt-10',
-    input: 'rounded-lg bg-sunken px-5 py-5 text-base text-content placeholder:text-content-muted',
+    input: 'rounded-lg bg-sunken px-5 py-5 text-base text-content placeholder:text-content-muted pl-5',
     submit: 'items-center rounded-lg bg-accent py-4 active:opacity-80',
     submitLabel: 'text-base font-bold text-on-accent',
   },

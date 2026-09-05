@@ -3,12 +3,11 @@ import { Pressable, Text, type PressableProps } from 'react-native';
 import { teamCardStyles } from './styles';
 
 import { Icon } from '@/components/icon';
-
-export type TeamCardTone = 'green' | 'yellow' | 'blue';
+import type { TeamTone } from '@/constants/team-colors';
 
 export type TeamCardProps = Omit<PressableProps, 'children' | 'style'> & {
   name: string;
-  tone?: TeamCardTone;
+  tone?: TeamTone;
 };
 
 export const TeamCard = ({ name, tone, ...rest }: TeamCardProps) => {

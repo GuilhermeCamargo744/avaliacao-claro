@@ -1,21 +1,22 @@
-import { Pressable, Text, View, type PressableProps } from 'react-native';
+import { Pressable, Text, type PressableProps } from 'react-native';
 
 import { colorFieldStyles } from './styles';
 
-export type ColorFieldTone = 'green' | 'yellow' | 'blue';
+import { ColorSwatch } from '@/components/color-swatch';
+import type { TeamTone } from '@/constants/team-colors';
 
 export type ColorFieldProps = Omit<PressableProps, 'children' | 'style'> & {
   label: string;
-  tone?: ColorFieldTone;
+  tone: TeamTone;
 };
 
 export const ColorField = ({ label, tone, ...rest }: ColorFieldProps) => {
-  const styles = colorFieldStyles({ tone });
+  const styles = colorFieldStyles();
 
   return (
     <Pressable accessibilityRole="button" className={styles.base()} {...rest}>
       <Text className={styles.label()}>{label}</Text>
-      <View className={styles.swatch()} />
+      <ColorSwatch tone={tone} />
     </Pressable>
   );
 };
