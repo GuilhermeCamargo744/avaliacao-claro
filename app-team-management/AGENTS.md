@@ -58,3 +58,27 @@ Regras:
 `src/components/` continua em `StyleSheet.create` + `useTheme()` + `Spacing`. Não misture
 as duas stacks no mesmo componente. Atenção: `ThemedText` / `ThemedView` / `HintRow` **não
 aceitam nem repassam `className`**, então apontar um slot `tv` para eles é no-op silencioso.
+
+### Cores
+
+Todas as cores moram em `src/styles/theme.css`, em duas camadas: a paleta base (`@theme`)
+com os tons crus, e os tokens semânticos (`@theme inline`) que descrevem o papel da cor.
+**Use sempre o token semântico** (`bg-surface`, `text-content-muted`), nunca a paleta crua
+(`bg-gray-700`) — assim trocar o tom de todos os cards é uma linha só.
+
+### Armadilhas cross-platform (custaram debug, não repita)
+
+- **Não use `SafeAreaView` para layout.** Ele não é interop'd pelo react-native-css, então
+  `className` nele é **ignorado no nativo** (na web "funciona" por acidente, porque o
+  react-native-web repassa a prop pro DOM). Pior: ele escreve os insets como *style inline*,
+  que sobrescreve qualquer classe de padding. Use as utilities `pt-safe` / `pb-safe` /
+  `px-safe` (vêm do `tailwindcss-safe-area`, já embutido no `nativewind/theme`) numa `View`
+  normal. Elas compilam para `env(safe-area-inset-*)`, que o react-native-css converte em
+  `var(--react-native-css-safe-area-inset-*)` — alimentada pelo `SafeAreaProvider` que o
+  expo-router já monta.
+- **Componente de terceiro que precisa de `className` passa por `styled`** (de `nativewind`),
+  como em `src/components/icon.tsx`. Mapeie para `style` (`{ className: 'style' }`), **não**
+  para uma prop via `nativeStyleMapping`: esse campo só existe na implementação nativa; na web
+  o `styled` o ignora e o estilo some sem erro.
+- **Não use `w-full` em filho de coluna flex.** O RN já estica os filhos (`align-items:
+  stretch`), e o `width: 100%` resolve contra a caixa errada, estourando o padding do pai.
