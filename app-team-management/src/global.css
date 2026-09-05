@@ -3,6 +3,10 @@
 @import 'tailwindcss/utilities.css';
 @import 'nativewind/theme';
 
+@import './styles/theme.css';
+
+@source not '../**/*.md';
+
 :root {
   --font-display:
     Spline Sans, Inter, ui-sans-serif, system-ui, sans-serif, Apple Color Emoji, Segoe UI Emoji,
@@ -11,35 +15,4 @@
     ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, Liberation Mono, Courier New, monospace;
   --font-rounded: 'SF Pro Rounded', 'Hiragino Maru Gothic ProN', Meiryo, 'MS PGothic', sans-serif;
   --font-serif: Georgia, 'Times New Roman', serif;
-}
-
-/**
- * Design tokens do app, espelhando `Colors` em src/constants/theme.ts.
- * Ficam em variáveis CSS para que o tema claro/escuro seja resolvido em runtime,
- * e são expostos ao Tailwind logo abaixo via `@theme inline`.
- */
-:root {
-  --app-text: #000000;
-  --app-text-secondary: #60646c;
-  --app-background: #ffffff;
-  --app-background-element: #f0f0f3;
-  --app-background-selected: #e0e1e6;
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --app-text: #ffffff;
-    --app-text-secondary: #b0b4ba;
-    --app-background: #000000;
-    --app-background-element: #212225;
-    --app-background-selected: #2e3135;
-  }
-}
-
-@theme inline {
-  --color-text: var(--app-text);
-  --color-text-secondary: var(--app-text-secondary);
-  --color-background: var(--app-background);
-  --color-background-element: var(--app-background-element);
-  --color-background-selected: var(--app-background-selected);
 }
