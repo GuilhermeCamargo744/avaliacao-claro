@@ -1,0 +1,43 @@
+enum TaskStatus {
+  @@type("pg/text@1")
+
+  pending     = "pending"
+  in_progress = "in_progress"
+  done        = "done"
+}
+
+model Team {
+  id          String            @id @default(uuid())
+  name        String
+  colorHex    String
+  description String?
+  tasks       TaskTeam[]
+  createdAt   TimestamptzString @default(now())
+  updatedAt   temporal.updatedAtString()
+
+  @@index([name])
+}
+
+model Task {
+  id          String            @id @default(uuid())
+  title       String
+  description String?
+  status      TaskStatus        @default(pending)
+  dueDate     TimestamptzString?
+  teams       TaskTeam[]
+  createdAt   TimestamptzString @default(now())
+  updatedAt   temporal.updatedAtString()
+
+  @@index([status])
+  @@index([dueDate])
+}
+
+model TaskTeam {
+  taskId String
+  teamId String
+  task   Task   @relation(fields: [taskId], references: [id], onDelete: Cascade)
+  team   Team   @relation(fields: [teamId], references: [id], onDelete: Cascade)
+
+  @@id([taskId, teamId])
+  @@index([teamId])
+}
