@@ -1,4 +1,4 @@
-import { Pressable, Text, TextInput, View } from 'react-native';
+import { ActivityIndicator, Pressable, Text, TextInput, View } from 'react-native';
 
 import { ColorField } from '../components/color-field/color-field';
 import { ColorPicker } from '../components/color-picker/color-picker';
@@ -8,8 +8,14 @@ import { Icon } from '@/components/icon';
 import type { TeamTone } from '@/constants/team-colors';
 
 export type CreateNewTeamViewProps = {
+  name: string;
   tone: TeamTone;
   isColorPickerOpen: boolean;
+  isSubmitting: boolean;
+  canSubmit: boolean;
+  errorMessage: string | null;
+  onChangeName: (value: string) => void;
+  onSubmit: () => void;
   onOpenColorPicker: () => void;
   onCloseColorPicker: () => void;
   onSelectTone: (tone: TeamTone) => void;
@@ -17,14 +23,20 @@ export type CreateNewTeamViewProps = {
 };
 
 export const CreateNewTeamView = ({
+  name,
   tone,
   isColorPickerOpen,
+  isSubmitting,
+  canSubmit,
+  errorMessage,
+  onChangeName,
+  onSubmit,
   onOpenColorPicker,
   onCloseColorPicker,
   onSelectTone,
   onBack,
 }: CreateNewTeamViewProps) => {
-  const styles = createNewTeamStyles();
+  const styles = createNewTeamStyles({ submitDisabled: !canSubmit });
 
   return (
     <View className={styles.base()}>
@@ -44,13 +56,33 @@ export const CreateNewTeamView = ({
         </View>
 
         <View className={styles.form()}>
-          <TextInput className={styles.input()} placeholder="Nome do time" />
+          <TextInput
+            className={styles.input()}
+            placeholder="Nome do time"
+            value={name}
+            onChangeText={onChangeName}
+            autoCapitalize="words"
+            returnKeyType="done"
+            onSubmitEditing={onSubmit}
+            maxLength={60}
+          />
 
           <ColorField label="Cor do time" tone={tone} onPress={onOpenColorPicker} />
 
-          <Pressable accessibilityRole="button" className={styles.submit()}>
-            <Text className={styles.submitLabel()}>Criar</Text>
+          <Pressable
+            accessibilityRole="button"
+            accessibilityState={{ disabled: !canSubmit, busy: isSubmitting }}
+            disabled={!canSubmit}
+            onPress={onSubmit}
+            className={styles.submit()}>
+            {isSubmitting ? (
+              <ActivityIndicator />
+            ) : (
+              <Text className={styles.submitLabel()}>Criar</Text>
+            )}
           </Pressable>
+
+          {errorMessage ? <Text className={styles.feedbackText()}>{errorMessage}</Text> : null}
         </View>
       </View>
 

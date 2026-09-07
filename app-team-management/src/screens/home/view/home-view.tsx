@@ -1,4 +1,4 @@
-import { Pressable, Text, View } from 'react-native';
+import { ActivityIndicator, Pressable, ScrollView, Text, View } from 'react-native';
 
 import { SearchField } from '../components/search-field/search-field';
 import { TeamCard } from '../components/team-card/team-card';
@@ -14,10 +14,25 @@ export type HomeTeam = {
 
 export type HomeViewProps = {
   teams: readonly HomeTeam[];
+  searchTerm: string;
+  isLoading: boolean;
+  errorMessage: string | null;
+  onSearchTermChange: (value: string) => void;
+  onRetry: () => void;
   onCreateTeam: () => void;
+  onOpenTeam: (id: string) => void;
 };
 
-export const HomeView = ({ teams, onCreateTeam }: HomeViewProps) => {
+export const HomeView = ({
+  teams,
+  searchTerm,
+  isLoading,
+  errorMessage,
+  onSearchTermChange,
+  onRetry,
+  onCreateTeam,
+  onOpenTeam,
+}: HomeViewProps) => {
   const styles = homeStyles();
 
   return (
@@ -27,13 +42,48 @@ export const HomeView = ({ teams, onCreateTeam }: HomeViewProps) => {
         <Text className={styles.subtitle()}>Acesse um dos times</Text>
       </View>
 
-      <SearchField placeholder="Busque um time" />
+      <SearchField
+        placeholder="Busque um time"
+        value={searchTerm}
+        onChangeText={onSearchTermChange}
+        autoCapitalize="none"
+        autoCorrect={false}
+        returnKeyType="search"
+        clearButtonMode="while-editing"
+      />
 
-      <View className={styles.list()}>
-        {teams.map((team) => (
-          <TeamCard key={team.id} name={team.name} tone={team.tone} />
-        ))}
-      </View>
+      {isLoading ? (
+        <View className={styles.feedback()}>
+          <ActivityIndicator />
+        </View>
+      ) : errorMessage ? (
+        <View className={styles.feedback()}>
+          <Text className={styles.feedbackText()}>{errorMessage}</Text>
+          <Pressable accessibilityRole="button" onPress={onRetry} className={styles.retryButton()}>
+            <Text className={styles.retryLabel()}>Tentar novamente</Text>
+          </Pressable>
+        </View>
+      ) : teams.length === 0 ? (
+        <View className={styles.feedback()}>
+          <Text className={styles.feedbackText()}>
+            {searchTerm ? 'Nenhum time encontrado.' : 'Nenhum time ainda. Crie o primeiro.'}
+          </Text>
+        </View>
+      ) : (
+        <ScrollView
+          className={styles.list()}
+          contentContainerClassName={styles.listContent()}
+          keyboardShouldPersistTaps="handled">
+          {teams.map((team) => (
+            <TeamCard
+              key={team.id}
+              name={team.name}
+              tone={team.tone}
+              onPress={() => onOpenTeam(team.id)}
+            />
+          ))}
+        </ScrollView>
+      )}
 
       <View className={styles.footer()}>
         <Pressable
