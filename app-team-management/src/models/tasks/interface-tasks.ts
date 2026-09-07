@@ -40,3 +40,10 @@ export interface ListTasksFilters {
   status?: TaskStatus;
   search?: string;
 }
+
+export interface CreateTaskInput {
+  title: string;
+  description?: string;
+  status?: TaskStatus;
+  teamId: string;
+}
