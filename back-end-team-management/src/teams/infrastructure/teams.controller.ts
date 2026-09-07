@@ -15,7 +15,7 @@ import { CreateTeamDto } from './dto/create-team.dto.js';
 import { UpdateTeamDto } from './dto/update-team.dto.js';
 
 const idParam = new ParseUUIDPipe({
-  exceptionFactory: () => new BadRequestException('id deve ser um UUID válido'),
+  exceptionFactory: () => new BadRequestException('O identificador deve ser um UUID válido'),
 });
 
 @Controller('teams')
