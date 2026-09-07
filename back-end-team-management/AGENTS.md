@@ -69,7 +69,11 @@ npm run db:plan -- --name <slug>    # planeja a migration (offline)
 npm run db:migrate                  # aplica no banco
 npm run db:verify                   # confere se o banco bate com o contract
 npm run db:update                   # atalho de dev: aplica sem escrever migration
+npm run seed                        # 3 times e 10 tarefas (apaga o que já existe)
 ```
+
+O seed roda a partir do build (`dist/prisma/seed.js`), não do fonte: `node` não resolve
+`./db.js` para o `.ts` durante o type stripping.
 
 - Migration **não é `.sql`**. Cada uma é um pacote com `migration.ts` (renderizado pelo
   framework), `ops.json` (as operações, com o SQL dentro) e `migration.json` (hash). Editou

@@ -27,6 +27,7 @@
     "db:emit": "prisma contract emit",
     "db:plan": "prisma migration plan",
     "db:migrate": "prisma db migrate",
+    "seed": "npm run build && node dist/prisma/seed.js",
     "db:init": "prisma db init",
     "db:update": "prisma db update",
     "db:verify": "prisma db verify"
