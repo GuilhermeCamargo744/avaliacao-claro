@@ -11,6 +11,7 @@ export type HomeTeamTasksViewProps = {
   isLoading: boolean;
   errorMessage: string | null;
   onBack: () => void;
+  onCreateTask: () => void;
 };
 
 export const HomeTeamTasksView = ({
@@ -18,6 +19,7 @@ export const HomeTeamTasksView = ({
   isLoading,
   errorMessage,
   onBack,
+  onCreateTask,
 }: HomeTeamTasksViewProps) => {
   const styles = homeTeamTasksStyles();
 
@@ -63,7 +65,10 @@ export const HomeTeamTasksView = ({
       )}
 
       <View className={styles.footer()}>
-        <Pressable accessibilityRole="button" className={styles.newTaskButton()}>
+        <Pressable
+          accessibilityRole="button"
+          onPress={onCreateTask}
+          className={styles.newTaskButton()}>
           <Text className={styles.newTaskLabel()}>Nova Tarefa</Text>
         </Pressable>
       </View>
