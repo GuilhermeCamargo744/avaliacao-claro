@@ -1,5 +1,6 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 
+import { showSuccessToast } from '@/components/toast/show-toast';
 import { getTeam } from '@/models/teams/get-team';
 import { getTeams } from '@/models/teams/get-teams';
 import { postTeams } from '@/models/teams/post-teams';
@@ -16,6 +17,9 @@ export const useCreateTeamMutation = () => {
 
   return useMutation({
     mutationFn: postTeams,
-    onSuccess: () => queryClient.invalidateQueries({ queryKey: TEAMS_KEY }),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: TEAMS_KEY });
+      showSuccessToast('Time criado com sucesso');
+    },
   });
 };

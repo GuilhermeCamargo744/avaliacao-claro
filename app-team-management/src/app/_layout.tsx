@@ -5,8 +5,10 @@ import { DarkTheme, DefaultTheme, Stack, ThemeProvider } from 'expo-router';
 import * as SplashScreen from 'expo-splash-screen';
 import { LogBox, useColorScheme } from 'react-native';
 import { Provider as StoreProvider } from 'react-redux';
+import Toast from 'react-native-toast-message';
 
 import { AnimatedSplashOverlay } from '@/components/animated-icon';
+import { toastConfig } from '@/components/toast/toast-config';
 import { queryClient } from '@/models/query-client';
 import { store } from '@/store/store';
 
@@ -23,6 +25,7 @@ export default function RootLayout() {
         <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
           <AnimatedSplashOverlay />
           <Stack screenOptions={{ headerShown: false }} />
+          <Toast config={toastConfig} topOffset={60} />
         </ThemeProvider>
       </QueryClientProvider>
     </StoreProvider>

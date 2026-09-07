@@ -17,11 +17,6 @@ export const useCreateNewTeam = () => {
   const trimmedName = name.trim();
   const canSubmit = trimmedName.length >= MIN_NAME_LENGTH && !createTeam.isPending;
 
-  const onChangeName = (value: string) => {
-    setName(value);
-    if (createTeam.isError) createTeam.reset();
-  };
-
   const onSubmit = () => {
     if (!canSubmit) return;
 
@@ -34,8 +29,7 @@ export const useCreateNewTeam = () => {
     isColorPickerOpen,
     isSubmitting: createTeam.isPending,
     canSubmit,
-    errorMessage: createTeam.error?.message ?? null,
-    onChangeName,
+    onChangeName: setName,
     onSubmit,
     onOpenColorPicker: () => setColorPickerOpen(true),
     onCloseColorPicker: () => setColorPickerOpen(false),

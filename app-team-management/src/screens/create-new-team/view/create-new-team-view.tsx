@@ -13,7 +13,6 @@ export type CreateNewTeamViewProps = {
   isColorPickerOpen: boolean;
   isSubmitting: boolean;
   canSubmit: boolean;
-  errorMessage: string | null;
   onChangeName: (value: string) => void;
   onSubmit: () => void;
   onOpenColorPicker: () => void;
@@ -28,7 +27,6 @@ export const CreateNewTeamView = ({
   isColorPickerOpen,
   isSubmitting,
   canSubmit,
-  errorMessage,
   onChangeName,
   onSubmit,
   onOpenColorPicker,
@@ -81,8 +79,6 @@ export const CreateNewTeamView = ({
               <Text className={styles.submitLabel()}>Criar</Text>
             )}
           </Pressable>
-
-          {errorMessage ? <Text className={styles.feedbackText()}>{errorMessage}</Text> : null}
         </View>
       </View>
 

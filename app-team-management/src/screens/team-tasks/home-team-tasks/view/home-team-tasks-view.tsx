@@ -12,6 +12,7 @@ export type HomeTeamTasksViewProps = {
   errorMessage: string | null;
   onBack: () => void;
   onCreateTask: () => void;
+  onEditTask: (taskId: string) => void;
 };
 
 export const HomeTeamTasksView = ({
@@ -20,6 +21,7 @@ export const HomeTeamTasksView = ({
   errorMessage,
   onBack,
   onCreateTask,
+  onEditTask,
 }: HomeTeamTasksViewProps) => {
   const styles = homeTeamTasksStyles();
 
@@ -59,6 +61,7 @@ export const HomeTeamTasksView = ({
               teams={task.teams}
               description={task.description}
               status={task.status}
+              onPress={() => onEditTask(task.id)}
             />
           ))}
         </ScrollView>

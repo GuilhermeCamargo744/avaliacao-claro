@@ -13,5 +13,6 @@ export const useHomeTeamTasks = () => {
     errorMessage: error?.message ?? null,
     onBack: () => router.back(),
     onCreateTask: () => router.push('/create-task'),
+    onEditTask: (taskId: string) => router.push(`/edit-task/${taskId}`),
   };
 };

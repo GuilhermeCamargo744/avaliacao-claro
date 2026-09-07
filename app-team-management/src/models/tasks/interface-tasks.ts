@@ -47,3 +47,11 @@ export interface CreateTaskInput {
   status?: TaskStatus;
   teamId: string;
 }
+
+export interface UpdateTaskInput {
+  id: string;
+  title: string;
+  description: string;
+  status: TaskStatus;
+  teamId: string;
+}

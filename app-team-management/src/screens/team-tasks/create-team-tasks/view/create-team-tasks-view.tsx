@@ -1,11 +1,19 @@
 import { Controller, type Control, type FieldErrors } from 'react-hook-form';
-import { ActivityIndicator, Pressable, ScrollView, Text, TextInput, View } from 'react-native';
+import {
+  ActivityIndicator,
+  KeyboardAvoidingView,
+  Pressable,
+  ScrollView,
+  Text,
+  TextInput,
+  View,
+} from 'react-native';
 
-import { SelectField, type SelectOption } from '../components/select-field/select-field';
 import type { CreateTaskForm } from '../schema';
 import { createTeamTasksStyles } from './styles';
 
 import { Icon } from '@/components/icon';
+import { SelectField, type SelectOption } from '@/components/select-field/select-field';
 
 export type CreateTeamTasksViewProps = {
   control: Control<CreateTaskForm>;
@@ -13,7 +21,6 @@ export type CreateTeamTasksViewProps = {
   teamOptions: readonly SelectOption[];
   statusOptions: readonly SelectOption[];
   isSubmitting: boolean;
-  errorMessage: string | null;
   onSubmit: () => void;
   onBack: () => void;
 };
@@ -24,14 +31,13 @@ export const CreateTeamTasksView = ({
   teamOptions,
   statusOptions,
   isSubmitting,
-  errorMessage,
   onSubmit,
   onBack,
 }: CreateTeamTasksViewProps) => {
   const styles = createTeamTasksStyles({ submitDisabled: isSubmitting });
 
   return (
-    <View className={styles.base()}>
+    <KeyboardAvoidingView behavior="padding" className={styles.base()}>
       <Pressable
         accessibilityRole="button"
         accessibilityLabel="Voltar"
@@ -40,7 +46,11 @@ export const CreateTeamTasksView = ({
         <Icon name="chevron-back" size={28} className={styles.backIcon()} />
       </Pressable>
 
-      <ScrollView className={styles.content()} keyboardShouldPersistTaps="handled">
+      <ScrollView
+        className={styles.content()}
+        contentContainerClassName={styles.contentContainer()}
+        keyboardShouldPersistTaps="handled"
+        showsVerticalScrollIndicator={false}>
         <View className={styles.hero()}>
           <Icon name="checkbox-outline" size={48} className={styles.heroIcon()} />
           <Text className={styles.title()}>Nova tarefa</Text>
@@ -121,10 +131,8 @@ export const CreateTeamTasksView = ({
               <Text className={styles.submitLabel()}>Criar</Text>
             )}
           </Pressable>
-
-          {errorMessage ? <Text className={styles.fieldError()}>{errorMessage}</Text> : null}
         </View>
       </ScrollView>
-    </View>
+    </KeyboardAvoidingView>
   );
 };
