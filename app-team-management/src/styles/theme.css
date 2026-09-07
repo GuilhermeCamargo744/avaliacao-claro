@@ -27,6 +27,12 @@
   --color-content: var(--color-gray-50); 
   --color-content-muted: var(--color-gray-400); 
 
+  --color-danger: var(--color-team-red);
+
+  --color-status-pending: var(--color-team-red);
+  --color-status-progress: var(--color-team-yellow);
+  --color-status-done: var(--color-team-green);
+
   --color-accent: var(--color-green-700);
   --color-on-accent: var(--color-gray-50); 
 }

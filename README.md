@@ -42,11 +42,17 @@ Para derrubar tudo: `npm run db:down` (o volume com os dados é preservado;
 
 ```bash
 cd back-end-team-management
-docker compose up -d postgres
+npm run db:only              # sobe só o Postgres
 npm install
 npm run db:migrate
 npm run start:dev
 ```
+
+Se a API do Docker já estiver no ar (de um `npm run db:up` anterior), pare-a com
+`docker compose stop api` antes.
+
+Os dois modos disputam a porta 3000, então só um pode estar no ar por vez. Se o
+`start:dev` falhar com `EADDRINUSE`, é o container da API que está ocupando a porta.
 
 > O CLI do Docker do Docker Desktop fica em `~/.docker/bin`. Se `docker` não for
 > encontrado no terminal, adicione `export PATH="$HOME/.docker/bin:$PATH"` ao seu
@@ -65,6 +71,98 @@ npm run db:migrate                  # aplica no banco
 
 As migrations são versionadas no repositório: quem clona o projeto sobe o
 container e roda `db:migrate` para chegar exatamente ao mesmo schema.
+
+### Endpoints
+
+| Método | Rota | Descrição |
+| --- | --- | --- |
+| POST | `/teams` | Cria um time |
+| GET | `/teams` | Lista os times |
+| GET | `/teams/:id` | Busca um time |
+| PATCH | `/teams/:id` | Atualiza um time |
+| DELETE | `/teams/:id` | Remove um time (204) |
+| POST | `/tasks` | Cria uma tarefa, opcionalmente vinculada a times |
+| GET | `/tasks` | Lista as tarefas, com filtros e paginação |
+| GET | `/tasks/:id` | Busca uma tarefa |
+| PATCH | `/tasks/:id` | Atualiza a tarefa (inclusive o status e os times) |
+| DELETE | `/tasks/:id` | Remove uma tarefa (204) |
+
+`GET /tasks` aceita `teamId`, `status` (`pending` \| `in_progress` \| `done`), `search`
+(procura em título e descrição), `sort` (`createdAt` \| `dueDate` \| `title`), `order`
+(`asc` \| `desc`), `limit` (1–100, padrão 20) e `offset` (padrão 0), e responde com
+envelope de paginação:
+
+```json
+{ "data": [ ... ], "meta": { "total": 42, "limit": 20, "offset": 0 } }
+```
+
+Cada tarefa carrega os times vinculados já com a cor, para o app desenhar o chip sem uma
+segunda chamada:
+
+```json
+{ "id": "...", "title": "Ajustar layout", "status": "pending", "dueDate": null,
+  "teams": [{ "id": "...", "name": "Time Alpha", "colorHex": "#2563EB" }] }
+```
+
+### Exemplos de requisições
+
+Com a API no ar em `http://localhost:3000`:
+
+```bash
+# criar um time
+curl -X POST http://localhost:3000/teams \
+  -H 'Content-Type: application/json' \
+  -d '{"name":"Time Alpha","colorHex":"#2563EB","description":"Squad de produto"}'
+
+# listar
+curl http://localhost:3000/teams
+
+# buscar por id
+curl http://localhost:3000/teams/<id>
+
+# atualizar
+curl -X PATCH http://localhost:3000/teams/<id> \
+  -H 'Content-Type: application/json' \
+  -d '{"name":"Time Beta"}'
+
+# remover (204, sem corpo)
+curl -X DELETE http://localhost:3000/teams/<id>
+```
+
+```bash
+# criar uma tarefa vinculada a um time
+curl -X POST http://localhost:3000/tasks \
+  -H 'Content-Type: application/json' \
+  -d '{"title":"Ajustar layout","description":"chip de cor","teamIds":["<teamId>"]}'
+
+# listar com filtro, busca, ordenação e paginação
+curl "http://localhost:3000/tasks?teamId=<teamId>&status=pending&search=layout&sort=title&order=asc&limit=20&offset=0"
+
+# marcar como concluída
+curl -X PATCH http://localhost:3000/tasks/<id> \
+  -H 'Content-Type: application/json' \
+  -d '{"status":"done"}'
+
+# trocar os times da tarefa
+curl -X PATCH http://localhost:3000/tasks/<id> \
+  -H 'Content-Type: application/json' \
+  -d '{"teamIds":["<teamId>"]}'
+
+# remover (204, sem corpo)
+curl -X DELETE http://localhost:3000/tasks/<id>
+```
+
+A collection do Postman com todas as chamadas, incluindo os casos de erro, está em
+[`postman/`](back-end-team-management/postman/). Importe o arquivo no Postman ou rode a
+suíte inteira pela linha de comando:
+
+```bash
+cd back-end-team-management
+npx newman run postman/team-management.postman_collection.json
+```
+
+O `Criar time` guarda o id na variável `{{teamId}}`, então as chamadas seguintes usam o
+time recém-criado — dá para rodar a collection inteira de ponta a ponta sem editar nada.
 
 ### Erros da API
 

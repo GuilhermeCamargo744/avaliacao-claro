@@ -10,5 +10,6 @@ import { TeamsController } from './infrastructure/teams.controller.js';
     TeamsService,
     { provide: TEAM_REPOSITORY, useClass: PrismaTeamRepository },
   ],
+  exports: [TEAM_REPOSITORY],
 })
 export class TeamsModule {}

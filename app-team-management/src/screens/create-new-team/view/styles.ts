@@ -12,7 +12,13 @@ export const createNewTeamStyles = tv({
     subtitle: 'text-base text-content-muted',
     form: 'gap-3 pt-10',
     input: 'rounded-lg bg-sunken px-5 py-5 text-base text-content placeholder:text-content-muted pl-5',
-    submit: 'items-center rounded-lg bg-accent py-4 active:opacity-80',
+    submit: 'items-center justify-center rounded-lg bg-accent py-4 active:opacity-80',
     submitLabel: 'text-base font-bold text-on-accent',
+    feedbackText: 'pt-1 text-sm text-danger',
+  },
+  variants: {
+    submitDisabled: {
+      true: { submit: 'opacity-50' },
+    },
   },
 });

@@ -18,7 +18,7 @@ async function bootstrap() {
             Object.values(error.constraints ?? {}).map((message) =>
               message.replace(
                 /^property (.+) should not exist$/,
-                'o campo $1 não é aceito',
+                'O campo $1 não é aceito',
               ),
             ),
           ),
