@@ -2,13 +2,8 @@ import { Pressable, Text, View, type PressableProps } from 'react-native';
 
 import { taskCardStyles } from './styles';
 
+import { TASK_STATUS_LABEL } from '@/constants/task-status';
 import type { TaskStatus, TaskTeam } from '@/models/tasks/interface-tasks';
-
-const STATUS_LABEL: Record<TaskStatus, string> = {
-  pending: 'pendente',
-  in_progress: 'em progresso',
-  done: 'concluída',
-};
 
 export type TaskCardProps = Omit<PressableProps, 'children' | 'style'> & {
   title: string;
@@ -29,7 +24,7 @@ export const TaskCard = ({ title, teams, description, status, ...rest }: TaskCar
         </View>
 
         <View className={styles.badge()}>
-          <Text className={styles.badgeLabel()}>{STATUS_LABEL[status]}</Text>
+          <Text className={styles.badgeLabel()}>{TASK_STATUS_LABEL[status]}</Text>
         </View>
       </View>
 

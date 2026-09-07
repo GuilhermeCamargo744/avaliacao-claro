@@ -170,6 +170,11 @@ no-op silencioso.
   `filter` já alocou.
 - **`useSelector` deve devolver primitivo.** Selector que devolve objeto novo re-renderiza
   a cada dispatch, e o compiler não conserta — ele roda fora da memoização do render.
+- **`ScrollView` não aceita `items-*` nem `justify-*` no `className`.** O RN lança
+  Invariant Violation exigindo que isso vá no `contentContainerClassName`. O
+  react-native-web não valida, então o erro só aparece no device — verificação por web
+  não pega. Regra: `className` leva só `flex-1`, o resto vai no container (com `grow`,
+  senão o `justify-center` não tem efeito).
 - **Todo `.tsx` em `src/app/` vira rota.** Provider e helper não moram lá.
 - **O layout raiz precisa renderizar um navegador** (`<Stack>`/`<Slot>`), senão as rotas não
   montam e a tela fica branca.
