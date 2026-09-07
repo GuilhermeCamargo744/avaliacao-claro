@@ -72,6 +72,17 @@ npm run db:migrate                  # aplica no banco
 As migrations são versionadas no repositório: quem clona o projeto sobe o
 container e roda `db:migrate` para chegar exatamente ao mesmo schema.
 
+### Dados iniciais
+
+```bash
+npm run seed
+```
+
+Popula o banco com 3 times e 10 tarefas — status variados, tarefas em mais de um time e
+uma sem time nenhum, para exercitar os filtros. O script **apaga tarefas e times antes de
+inserir**, então rodar duas vezes deixa sempre o mesmo resultado. Não rode contra um banco
+com dados que você queira manter.
+
 ### Endpoints
 
 | Método | Rota | Descrição |
@@ -182,6 +193,43 @@ Toda falha responde com o mesmo envelope:
 `details` só aparece em erro de validação, com uma mensagem por campo. Em falhas
 inesperadas o cliente recebe uma mensagem genérica e o motivo real vai para o log do
 servidor — detalhe interno não vaza na resposta.
+
+## O que faria diferente em produção
+
+O projeto roda local e é otimizado para ser avaliado rápido. Estes são os pontos que
+mudariam antes de ir para produção — os quatro primeiros são falhas conhecidas e
+verificadas neste código, não hipóteses.
+
+**Resiliência de conexão.** Hoje, se o Postgres reinicia, a API não se recupera sozinha: o
+pool fica com conexões mortas e só volta quando o processo reinicia. Em produção isso é
+indisponibilidade silenciosa. Entraria um health check (`/health`) que valida o banco de
+verdade, restart automático pelo orquestrador quando ele falha, e retry com backoff nas
+queries.
+
+**Segurança.** Não há autenticação: qualquer um cria e apaga times e tarefas. Entraria
+autenticação com JWT, autorização por dono do recurso e rate limiting. As credenciais do
+banco hoje vivem em `.env` e no `docker-compose.yml` em texto puro — em produção viriam de
+um gerenciador de segredos, nunca do repositório. E CORS precisa ser configurado com a
+lista de origens permitidas (hoje está desligado, o que já impede o Expo Web de chamar
+a API).
+
+**Logs e observabilidade.** O log é o padrão do Nest, sem correlação entre requisições.
+Entraria log estruturado em JSON com request id propagado, métricas de latência e taxa de
+erro por rota, e alarme para o 500. O filtro de exceção já separa o que o cliente vê do que
+vai para o log — é a base para isso.
+
+**Cache.** Nada é cacheado. Times mudam pouco e são lidos em toda tela: um cache curto com
+invalidação na escrita reduziria bastante a carga. No cliente, o React Query já cumpre esse
+papel; no servidor, entraria Redis quando houver mais de uma instância.
+
+**Escalabilidade.** A API é stateless, então escala horizontalmente sem mudança. O gargalo
+apareceria primeiro no banco: hoje o filtro `search` usa `ILIKE '%termo%'`, que não usa
+índice — com volume, viraria busca full-text do Postgres (`tsvector` + índice GIN). A
+paginação por `offset` degrada em páginas distantes; trocaria por cursor, que o Prisma já
+suporta.
+
+**Entrega.** Falta pipeline. Entraria CI rodando lint, testes e build a cada PR, com as
+migrations aplicadas no release antes de subir a nova versão da imagem.
 
 ## Decisões do projeto
 
