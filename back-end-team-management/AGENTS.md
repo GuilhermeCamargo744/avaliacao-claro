@@ -157,15 +157,15 @@ ESM obriga `NODE_OPTIONS=--experimental-vm-modules` (já está nos scripts) e `t
 ## Contrato da API
 
 Formato atual, documentado no [README](../README.md): rotas sem prefixo (`/teams`,
-`/tasks`), listagem de tarefas com `{ data, meta }` e listagem de times como array cru.
+`/tasks`) e as duas listagens com envelope `{ data, meta }`.
 
 Exigências do teste que valem para código novo:
 
 - CRUD de times e de tarefas.
 - Tarefa pertence a zero ou mais times; a cor do time viaja junto da tarefa, porque o app
   desenha o chip.
-- `GET /tasks` aceita `teamId`, `status`, `search`, `sort`, `order`, `limit` e `offset`, e
-  responde com `meta.total` para a paginação.
+- `GET /tasks` aceita `teamId`, `status`, `search`, `sort`, `order`, `limit` e `offset`;
+  `GET /teams` aceita `search`, `limit` e `offset`. As duas respondem com `meta.total`.
 - `status` é `pending | in_progress | done`.
 - Toda entrada validada; `title` e `name` com mínimo de 3 caracteres.
 
@@ -180,11 +180,7 @@ convida um bug.
 
 ## Pendências conhecidas
 
-- `GET /teams` ainda não tem paginação, busca nem metadata — o app filtra no cliente.
-  Mudar o formato para `{ data, meta }` quebra `models/teams` no app: é alteração
-  coordenada entre os dois projetos.
 - Sem CORS: o Expo Web não consegue chamar a API (nativo não é afetado).
 - A API não se recupera sozinha se o Postgres reiniciar — o pool fica com conexões mortas e
   só volta com restart do processo. Falta retry/health check.
-- `package-lock.json` está no `.gitignore` da raiz, mas o `Dockerfile` instala com
-  `npm ci`. Numa clonagem limpa o build falha.
+- A API não expõe autenticação nem rate limiting; qualquer um escreve.

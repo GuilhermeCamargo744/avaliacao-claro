@@ -2,6 +2,8 @@ import { tv } from 'tailwind-variants';
 
 export const selectFieldStyles = tv({
   slots: {
+    field: 'gap-2',
+    caption: 'px-1 text-sm text-content-muted',
     base: 'flex-row items-center justify-between rounded-lg bg-sunken px-5 py-5 active:opacity-70',
     label: 'flex-1 text-base',
     icon: 'text-content-muted',

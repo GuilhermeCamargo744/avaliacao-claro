@@ -95,11 +95,12 @@ export const CreateTeamTasksView = ({
             name="teamId"
             render={({ field }) => (
               <SelectField
-                placeholder="Selecione um time"
-                options={teamOptions}
-                value={field.value}
-                onChange={field.onChange}
-              />
+                  label="Selecione um time"
+                  placeholder="Selecione um time"
+                  options={teamOptions}
+                  value={field.value}
+                  onChange={field.onChange}
+                />
             )}
           />
           {errors.teamId ? (
@@ -111,11 +112,12 @@ export const CreateTeamTasksView = ({
             name="status"
             render={({ field }) => (
               <SelectField
-                placeholder="Selecione um status"
-                options={statusOptions}
-                value={field.value}
-                onChange={field.onChange}
-              />
+                  label="Selecione um status"
+                  placeholder="Selecione um status"
+                  options={statusOptions}
+                  value={field.value}
+                  onChange={field.onChange}
+                />
             )}
           />
 

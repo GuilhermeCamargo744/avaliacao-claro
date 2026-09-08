@@ -1,4 +1,12 @@
-import { ActivityIndicator, Pressable, Text, TextInput, View } from 'react-native';
+import {
+  ActivityIndicator,
+  KeyboardAvoidingView,
+  Pressable,
+  ScrollView,
+  Text,
+  TextInput,
+  View,
+} from 'react-native';
 
 import { ColorField } from '../components/color-field/color-field';
 import { ColorPicker } from '../components/color-picker/color-picker';
@@ -37,7 +45,7 @@ export const CreateNewTeamView = ({
   const styles = createNewTeamStyles({ submitDisabled: !canSubmit });
 
   return (
-    <View className={styles.base()}>
+    <KeyboardAvoidingView behavior="padding" className={styles.base()}>
       <Pressable
         accessibilityRole="button"
         accessibilityLabel="Voltar"
@@ -46,7 +54,11 @@ export const CreateNewTeamView = ({
         <Icon name="chevron-back" size={28} className={styles.backIcon()} />
       </Pressable>
 
-      <View className={styles.content()}>
+      <ScrollView
+        className={styles.content()}
+        contentContainerClassName={styles.contentContainer()}
+        keyboardShouldPersistTaps="handled"
+        showsVerticalScrollIndicator={false}>
         <View className={styles.hero()}>
           <Icon name="people-outline" size={56} className={styles.heroIcon()} />
           <Text className={styles.title()}>Novo Time</Text>
@@ -61,7 +73,6 @@ export const CreateNewTeamView = ({
             onChangeText={onChangeName}
             autoCapitalize="words"
             returnKeyType="done"
-            onSubmitEditing={onSubmit}
             maxLength={60}
           />
 
@@ -80,7 +91,7 @@ export const CreateNewTeamView = ({
             )}
           </Pressable>
         </View>
-      </View>
+      </ScrollView>
 
       <ColorPicker
         visible={isColorPickerOpen}
@@ -88,6 +99,6 @@ export const CreateNewTeamView = ({
         onSelect={onSelectTone}
         onClose={onCloseColorPicker}
       />
-    </View>
+    </KeyboardAvoidingView>
   );
 };

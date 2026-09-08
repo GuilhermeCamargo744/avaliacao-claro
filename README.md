@@ -98,10 +98,14 @@ com dados que você queira manter.
 | PATCH | `/tasks/:id` | Atualiza a tarefa (inclusive o status e os times) |
 | DELETE | `/tasks/:id` | Remove uma tarefa (204) |
 
+`GET /teams` aceita `search` (nome e descrição), `limit` (1–100, padrão 20) e `offset`
+(padrão 0), e devolve os times ordenados por nome.
+
 `GET /tasks` aceita `teamId`, `status` (`pending` \| `in_progress` \| `done`), `search`
 (procura em título e descrição), `sort` (`createdAt` \| `dueDate` \| `title`), `order`
-(`asc` \| `desc`), `limit` (1–100, padrão 20) e `offset` (padrão 0), e responde com
-envelope de paginação:
+(`asc` \| `desc`), `limit` (1–100, padrão 20) e `offset` (padrão 0).
+
+As duas listagens respondem com o mesmo envelope de paginação:
 
 ```json
 { "data": [ ... ], "meta": { "total": 42, "limit": 20, "offset": 0 } }
@@ -125,8 +129,8 @@ curl -X POST http://localhost:3000/teams \
   -H 'Content-Type: application/json' \
   -d '{"name":"Time Alpha","colorHex":"#2563EB","description":"Squad de produto"}'
 
-# listar
-curl http://localhost:3000/teams
+# listar, com busca e paginação
+curl "http://localhost:3000/teams?search=produto&limit=20&offset=0"
 
 # buscar por id
 curl http://localhost:3000/teams/<id>

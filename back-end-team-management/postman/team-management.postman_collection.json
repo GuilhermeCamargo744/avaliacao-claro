@@ -80,12 +80,22 @@
             "method": "GET",
             "header": [],
             "url": {
-              "raw": "{{baseUrl}}/teams",
+              "raw": "{{baseUrl}}/teams?limit=20&offset=0",
               "host": [
                 "{{baseUrl}}"
               ],
               "path": [
                 "teams"
+              ],
+              "query": [
+                {
+                  "key": "limit",
+                  "value": "20"
+                },
+                {
+                  "key": "offset",
+                  "value": "0"
+                }
               ]
             }
           },
@@ -96,7 +106,45 @@
                 "type": "text/javascript",
                 "exec": [
                   "pm.test('responde 200', () => pm.response.to.have.status(200));",
-                  "pm.test('devolve uma lista', () => pm.expect(pm.response.json()).to.be.an('array'));"
+                  "const body = pm.response.json();",
+                  "pm.test('envelope com data e meta', () => {",
+                  "  pm.expect(body.data).to.be.an('array');",
+                  "  pm.expect(body.meta.total).to.be.a('number');",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Buscar times por nome",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/teams?search=Alpha",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "teams"
+              ],
+              "query": [
+                {
+                  "key": "search",
+                  "value": "Alpha"
+                }
+              ]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('responde 200', () => pm.response.to.have.status(200));",
+                  "pm.test('todos batem com a busca', () => pm.response.json().data.forEach((t) => pm.expect(t.name).to.include('Alpha')));"
                 ]
               }
             }

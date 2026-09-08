@@ -1,10 +1,12 @@
 import { NotFoundException } from '@nestjs/common';
 import { Test, TestingModule } from '@nestjs/testing';
+import { Page } from '../../common/page.js';
 import type { Team } from '../domain/team.js';
 import { TEAM_REPOSITORY } from '../domain/team.repository.js';
 import type {
   NewTeam,
   TeamChanges,
+  TeamFilters,
   TeamRepository,
 } from '../domain/team.repository.js';
 import { TeamsService } from './teams.service.js';
@@ -27,8 +29,14 @@ class InMemoryTeamRepository implements TeamRepository {
     return created;
   }
 
-  async findAll() {
-    return [...this.teams.values()];
+  async findAll(filters: TeamFilters): Promise<Page<Team>> {
+    const all = [...this.teams.values()].filter(
+      (team) => !filters.search || team.name.includes(filters.search),
+    );
+    return {
+      data: all.slice(filters.offset, filters.offset + filters.limit),
+      meta: { total: all.length, limit: filters.limit, offset: filters.offset },
+    };
   }
 
   async findById(id: string) {
@@ -66,11 +74,23 @@ describe('TeamsService', () => {
     service = module.get(TeamsService);
   });
 
-  it('cria um time e devolve na listagem', async () => {
+  it('cria um time e devolve na listagem com o total', async () => {
     const team = await service.create({ name: 'Alpha', colorHex: '#2563EB' });
+    const page = await service.findAll({ limit: 20, offset: 0 });
 
     expect(team.id).toBeDefined();
-    expect(await service.findAll()).toEqual([team]);
+    expect(page.data).toEqual([team]);
+    expect(page.meta.total).toBe(1);
+  });
+
+  it('filtra a listagem pela busca', async () => {
+    await service.create({ name: 'Alpha', colorHex: '#2563EB' });
+    await service.create({ name: 'Beta', colorHex: '#16A34A' });
+
+    const page = await service.findAll({ search: 'Bet', limit: 20, offset: 0 });
+
+    expect(page.meta.total).toBe(1);
+    expect(page.data[0]?.name).toBe('Beta');
   });
 
   it('atualiza um time existente', async () => {

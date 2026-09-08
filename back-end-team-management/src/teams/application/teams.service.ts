@@ -3,6 +3,7 @@ import { TEAM_REPOSITORY } from '../domain/team.repository.js';
 import type {
   NewTeam,
   TeamChanges,
+  TeamFilters,
   TeamRepository,
 } from '../domain/team.repository.js';
 
@@ -16,8 +17,8 @@ export class TeamsService {
     return this.teams.create(team);
   }
 
-  findAll() {
-    return this.teams.findAll();
+  findAll(filters: TeamFilters) {
+    return this.teams.findAll(filters);
   }
 
   async findOne(id: string) {

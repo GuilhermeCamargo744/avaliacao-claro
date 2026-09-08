@@ -9,9 +9,11 @@ import {
   ParseUUIDPipe,
   Patch,
   Post,
+  Query,
 } from '@nestjs/common';
 import { TeamsService } from '../application/teams.service.js';
 import { CreateTeamDto } from './dto/create-team.dto.js';
+import { ListTeamsDto } from './dto/list-teams.dto.js';
 import { UpdateTeamDto } from './dto/update-team.dto.js';
 
 const idParam = new ParseUUIDPipe({
@@ -28,8 +30,8 @@ export class TeamsController {
   }
 
   @Get()
-  findAll() {
-    return this.teamsService.findAll();
+  findAll(@Query() query: ListTeamsDto) {
+    return this.teamsService.findAll(query);
   }
 
   @Get(':id')
