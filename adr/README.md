@@ -12,6 +12,10 @@ contexto, a decisão tomada, a justificativa e as consequências.
 | [0003](0003-postgresql-com-prisma-next.md) | PostgreSQL com Prisma Next | Aceito |
 | [0004](0004-arquitetura-hexagonal-no-back-end.md) | Arquitetura hexagonal nos módulos do back-end | Aceito |
 | [0005](0005-docker-compose-para-o-ambiente-local.md) | Docker Compose para o ambiente local | Aceito |
+| [0006](0006-react-query-para-requisicoes-e-cache.md) | React Query para requisições e cache | Aceito |
+| [0007](0007-nativewind-para-estilizacao.md) | NativeWind para estilização | Aceito |
+| [0008](0008-arquitetura-em-ecossistemas-no-mobile.md) | Arquitetura em ecossistemas no mobile | Aceito |
+| [0009](0009-redux-toolkit-para-estado-global.md) | Redux Toolkit para estado global de UI | Aceito |
 
 ## Como adicionar uma nova decisão
 

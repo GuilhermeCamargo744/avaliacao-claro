@@ -301,3 +301,48 @@ Postgres com as mesmas credenciais, sem instalar nada além do Docker. O serviç
 inicia depois do healthcheck do banco, o que elimina a corrida entre os dois.
 
 Detalhes: [ADR 0005](adr/0005-docker-compose-para-o-ambiente-local.md)
+
+### 6. React Query
+
+**React Query** é dono do estado de servidor: listagens, detalhe e mutações. A tela chama
+o hook; o hook chama `src/models/`. Depois de escrever, a mutation invalida o cache.
+
+**Motivo:** é uma biblioteca estável, organiza as requisições do app e o cache deixa a
+navegação mais rápida — a home não busca de novo a cada volta.
+
+Detalhes: [ADR 0006](adr/0006-react-query-para-requisicoes-e-cache.md)
+
+### 7. Estilização: NativeWind
+
+As telas usam **NativeWind 5** com **tailwind-variants**. Classes ficam em `view/styles.ts`,
+nunca inline no JSX. Cores são tokens semânticos (`bg-surface`, `text-content-muted`).
+
+**Motivo:** é a biblioteca que mais tem ganhado espaço no front hoje, leva Tailwind ao
+React Native (o enunciado proíbe styled-components) e deixa a responsividade mais fácil
+de ajustar do que StyleSheet ou Dripsy.
+
+Detalhes: [ADR 0007](adr/0007-nativewind-para-estilizacao.md)
+
+### 8. Arquitetura em ecossistemas no mobile
+
+O app é separado por domínio (`screens/teams/`, `screens/team-tasks/`, `screens/home/`).
+Cada tela é um trio: `index.tsx` (container) + `use-[tela].ts` (lógica) + `view/`
+(apresentação). O que duas telas usam sobe para `src/components/`, `src/hooks/` ou
+`src/models/`. A view não chama API e não rompe camada.
+
+**Motivo:** cada ecossistema tem a sua região; arquivo, componente e tela têm uma
+responsabilidade; a hierarquia se mantém. Camadas globais existem para integrar o que é
+compartilhado, não para a tela pular direto ao axios.
+
+Detalhes: [ADR 0008](adr/0008-arquitetura-em-ecossistemas-no-mobile.md)
+
+### 9. Redux Toolkit
+
+**Redux Toolkit** guarda só estado global de UI. Hoje é o termo de busca da home. Dado de
+servidor não entra no store.
+
+**Motivo:** é uma das bibliotecas de estado global mais estáveis e confiáveis do mercado.
+É verbosa, mas organizada, e tem suporte forte da comunidade. Zustand cobriria o mesmo
+caso com menos cerimônia; o custo aqui é um slice de uma string.
+
+Detalhes: [ADR 0009](adr/0009-redux-toolkit-para-estado-global.md)

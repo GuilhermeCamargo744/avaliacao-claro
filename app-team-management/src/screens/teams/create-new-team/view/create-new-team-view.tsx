@@ -1,3 +1,4 @@
+import { Controller, type Control, type FieldErrors } from 'react-hook-form';
 import {
   ActivityIndicator,
   KeyboardAvoidingView,
@@ -8,6 +9,7 @@ import {
   View,
 } from 'react-native';
 
+import type { CreateTeamForm } from '../schema';
 import { createNewTeamStyles } from './styles';
 
 import { ColorField } from '@/components/color-field/color-field';
@@ -16,12 +18,11 @@ import { Icon } from '@/components/icon';
 import type { TeamTone } from '@/constants/team-colors';
 
 export type CreateNewTeamViewProps = {
-  name: string;
+  control: Control<CreateTeamForm>;
+  errors: FieldErrors<CreateTeamForm>;
   tone: TeamTone;
   isColorPickerOpen: boolean;
   isSubmitting: boolean;
-  canSubmit: boolean;
-  onChangeName: (value: string) => void;
   onSubmit: () => void;
   onOpenColorPicker: () => void;
   onCloseColorPicker: () => void;
@@ -30,19 +31,18 @@ export type CreateNewTeamViewProps = {
 };
 
 export const CreateNewTeamView = ({
-  name,
+  control,
+  errors,
   tone,
   isColorPickerOpen,
   isSubmitting,
-  canSubmit,
-  onChangeName,
   onSubmit,
   onOpenColorPicker,
   onCloseColorPicker,
   onSelectTone,
   onBack,
 }: CreateNewTeamViewProps) => {
-  const styles = createNewTeamStyles({ submitDisabled: !canSubmit });
+  const styles = createNewTeamStyles({ submitDisabled: isSubmitting });
 
   return (
     <KeyboardAvoidingView behavior="padding" className={styles.base()}>
@@ -66,22 +66,30 @@ export const CreateNewTeamView = ({
         </View>
 
         <View className={styles.form()}>
-          <TextInput
-            className={styles.input()}
-            placeholder="Nome do time"
-            value={name}
-            onChangeText={onChangeName}
-            autoCapitalize="words"
-            returnKeyType="done"
-            maxLength={60}
+          <Controller
+            control={control}
+            name="name"
+            render={({ field }) => (
+              <TextInput
+                className={styles.input()}
+                placeholder="Nome do time"
+                value={field.value}
+                onChangeText={field.onChange}
+                onBlur={field.onBlur}
+                autoCapitalize="words"
+                returnKeyType="done"
+                maxLength={60}
+              />
+            )}
           />
+          {errors.name ? <Text className={styles.fieldError()}>{errors.name.message}</Text> : null}
 
           <ColorField label="Cor do time" tone={tone} onPress={onOpenColorPicker} />
 
           <Pressable
             accessibilityRole="button"
-            accessibilityState={{ disabled: !canSubmit, busy: isSubmitting }}
-            disabled={!canSubmit}
+            accessibilityState={{ busy: isSubmitting }}
+            disabled={isSubmitting}
             onPress={onSubmit}
             className={styles.submit()}>
             {isSubmitting ? (
