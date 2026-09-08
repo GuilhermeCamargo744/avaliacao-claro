@@ -1,5 +1,9 @@
 # avaliacao-claro
 
+> **Branch `feat/render-deploy`.** Esta branch é o deploy da API no Render.
+> A `main` permanece o teste técnico local, sem deploy.
+> Passo a passo: [DEPLOY-RENDER.md](DEPLOY-RENDER.md).
+
 Monorepo da avaliação Claro: app mobile (Expo) e API (NestJS).
 
 Escrevi o passo a passo abaixo na ordem em que eu mesmo subo o projeto para testar —
@@ -150,6 +154,7 @@ com dados que você queira manter.
 
 | Método | Rota | Descrição |
 | --- | --- | --- |
+| GET | `/health` | Liveness: `{ "status": "ok" }` se o banco responde |
 | POST | `/teams` | Cria um time |
 | GET | `/teams` | Lista os times |
 | GET | `/teams/:id` | Busca um time |

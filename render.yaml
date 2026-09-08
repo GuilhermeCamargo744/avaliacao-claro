@@ -1,0 +1,26 @@
+# Blueprint do Render — só esta branch (`feat/render-deploy`).
+# A main permanece o teste técnico local, sem deploy.
+#
+# No dashboard: New → Blueprint → este repositório → branch feat/render-deploy.
+
+databases:
+  - name: team-management-db
+    postgresMajorVersion: "17"
+    databaseName: team_management
+
+services:
+  - type: web
+    name: team-management-api
+    runtime: docker
+    branch: feat/render-deploy
+    dockerfilePath: ./back-end-team-management/Dockerfile
+    dockerContext: ./back-end-team-management
+    healthCheckPath: /health
+    initialDeployHook: node dist/prisma/seed.js
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: DATABASE_URL
+        fromDatabase:
+          name: team-management-db
+          property: connectionString

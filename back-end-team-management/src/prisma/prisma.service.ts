@@ -10,9 +10,13 @@ export class PrismaService implements OnModuleInit, OnApplicationShutdown {
   readonly orm = db.orm;
   readonly sql = db.sql;
 
+  async ping() {
+    await db.transaction(async () => {});
+  }
+
   async onModuleInit() {
     await db.connect();
-    await db.transaction(async () => {});
+    await this.ping();
   }
 
   async onApplicationShutdown() {
