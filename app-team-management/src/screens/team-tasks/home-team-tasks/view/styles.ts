@@ -3,11 +3,8 @@ import { tv } from 'tailwind-variants';
 export const homeTeamTasksStyles = tv({
   slots: {
     base: 'flex-1 bg-background px-6 pt-safe pb-safe',
-    backButton: '-ml-2 p-2 active:opacity-60',
+    backButton: '-ml-2 self-start p-2 active:opacity-60',
     backIcon: 'text-content',
-    topBar: 'flex-row items-center justify-between',
-    editButton: '-mr-2 p-2 active:opacity-60',
-    editIcon: 'text-content',
     header: 'items-center gap-1 pb-6 pt-4',
     title: 'text-2xl font-bold text-content',
     subtitle: 'text-base text-content-muted',
