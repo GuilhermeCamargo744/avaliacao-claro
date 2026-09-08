@@ -8,6 +8,7 @@ import type { Task } from '@/models/tasks/interface-tasks';
 
 export type HomeTeamTasksViewProps = {
   tasks: readonly Task[];
+  subtitle: string;
   isLoading: boolean;
   errorMessage: string | null;
   onBack: () => void;
@@ -17,6 +18,7 @@ export type HomeTeamTasksViewProps = {
 
 export const HomeTeamTasksView = ({
   tasks,
+  subtitle,
   isLoading,
   errorMessage,
   onBack,
@@ -37,7 +39,7 @@ export const HomeTeamTasksView = ({
 
       <View className={styles.header()}>
         <Text className={styles.title()}>Tarefas</Text>
-        <Text className={styles.subtitle()}>adicione a galera e separe os times</Text>
+          <Text className={styles.subtitle()}>{subtitle}</Text>
       </View>
 
       {isLoading ? (

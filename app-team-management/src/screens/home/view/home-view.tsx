@@ -20,6 +20,7 @@ export type HomeViewProps = {
   onSearchTermChange: (value: string) => void;
   onRetry: () => void;
   onCreateTeam: () => void;
+  onOpenTasks: () => void;
   onOpenTeam: (id: string) => void;
   onEditTeam: (id: string) => void;
 };
@@ -32,6 +33,7 @@ export const HomeView = ({
   onSearchTermChange,
   onRetry,
   onCreateTeam,
+  onOpenTasks,
   onOpenTeam,
   onEditTeam,
 }: HomeViewProps) => {
@@ -89,6 +91,12 @@ export const HomeView = ({
       )}
 
       <View className={styles.footer()}>
+        <Pressable
+          accessibilityRole="button"
+          onPress={onOpenTasks}
+          className={styles.tasksButton()}>
+          <Text className={styles.tasksButtonLabel()}>Todas as tarefas</Text>
+        </Pressable>
         <Pressable
           accessibilityRole="button"
           onPress={onCreateTeam}
