@@ -21,6 +21,7 @@ export type HomeViewProps = {
   onRetry: () => void;
   onCreateTeam: () => void;
   onOpenTeam: (id: string) => void;
+  onEditTeam: (id: string) => void;
 };
 
 export const HomeView = ({
@@ -32,6 +33,7 @@ export const HomeView = ({
   onRetry,
   onCreateTeam,
   onOpenTeam,
+  onEditTeam,
 }: HomeViewProps) => {
   const styles = homeStyles();
 
@@ -80,6 +82,7 @@ export const HomeView = ({
               name={team.name}
               tone={team.tone}
               onPress={() => onOpenTeam(team.id)}
+              onEdit={() => onEditTeam(team.id)}
             />
           ))}
         </ScrollView>
