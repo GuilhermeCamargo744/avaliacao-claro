@@ -15,7 +15,7 @@ export const createNewTeamStyles = tv({
     input: 'rounded-lg bg-sunken px-5 py-5 text-base text-content placeholder:text-content-muted pl-5',
     submit: 'items-center justify-center rounded-lg bg-accent py-4 active:opacity-80',
     submitLabel: 'text-base font-bold text-on-accent',
-    feedbackText: 'pt-1 text-sm text-danger',
+    fieldError: 'px-1 text-sm text-danger',
   },
   variants: {
     submitDisabled: {

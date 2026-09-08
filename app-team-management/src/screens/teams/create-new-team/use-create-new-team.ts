@@ -1,40 +1,39 @@
+import { zodResolver } from '@hookform/resolvers/zod';
 import { useRouter } from 'expo-router';
 import { useState } from 'react';
+import { useForm } from 'react-hook-form';
 
-import { useCreateTeamMutation } from '@/hooks/use-query-teams';
+import { createTeamSchema, type CreateTeamForm } from './schema';
+
 import type { TeamTone } from '@/constants/team-colors';
-
-const MIN_NAME_LENGTH = 3;
+import { useCreateTeamMutation } from '@/hooks/use-query-teams';
 
 export const useCreateNewTeam = () => {
   const router = useRouter();
   const createTeam = useCreateTeamMutation();
-
-  const [name, setName] = useState('');
-  const [tone, setTone] = useState<TeamTone>('yellow');
   const [isColorPickerOpen, setColorPickerOpen] = useState(false);
 
-  const trimmedName = name.trim();
-  const canSubmit = trimmedName.length >= MIN_NAME_LENGTH && !createTeam.isPending;
+  const { control, handleSubmit, setValue, watch, formState } = useForm<CreateTeamForm>({
+    resolver: zodResolver(createTeamSchema),
+    mode: 'onTouched',
+    defaultValues: { name: '', tone: 'yellow' },
+  });
 
-  const onSubmit = () => {
-    if (!canSubmit) return;
-
-    createTeam.mutate({ name: trimmedName, tone }, { onSuccess: () => router.back() });
-  };
+  const onSubmit = handleSubmit((values) => {
+    createTeam.mutate({ name: values.name, tone: values.tone }, { onSuccess: () => router.back() });
+  });
 
   return {
-    name,
-    tone,
+    control,
+    errors: formState.errors,
+    tone: watch('tone'),
     isColorPickerOpen,
     isSubmitting: createTeam.isPending,
-    canSubmit,
-    onChangeName: setName,
     onSubmit,
     onOpenColorPicker: () => setColorPickerOpen(true),
     onCloseColorPicker: () => setColorPickerOpen(false),
-    onSelectTone: (next: TeamTone) => {
-      setTone(next);
+    onSelectTone: (tone: TeamTone) => {
+      setValue('tone', tone, { shouldDirty: true, shouldValidate: true });
       setColorPickerOpen(false);
     },
     onBack: () => router.back(),
