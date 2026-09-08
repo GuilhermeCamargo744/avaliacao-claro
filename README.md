@@ -36,6 +36,7 @@ O passo a passo local (clonar, Docker, Expo Go) continua abaixo e em
 - Git, Node.js 22, Docker Desktop (aberto)
 - Celular com [Expo Go](https://expo.dev/go) (mesma Wi-Fi do computador)
 - Não use o navegador (Expo Web): a API não tem CORS
+- Se o celular não alcançar a API local: emulador do Android Studio **com Expo Go**
 
 ### 1. Clonar
 
@@ -66,11 +67,24 @@ npm install
 npx expo start
 ```
 
+Não preencha `EXPO_PUBLIC_API_URL` com `http://localhost:3000`. No Expo Go do
+celular, `localhost` é o **aparelho**, não o computador — a API some. Sem essa
+variável o app usa o host do Metro (`http://<ip-da-máquina>:3000`). O
+`.env.example` explica isso. Se você já tinha colocado `localhost` no `.env`,
+apague a linha e suba de novo com cache limpo: `npx expo start -c`.
+
 ### 4. Abrir no celular
 
-Instale o Expo Go, leia o QR do terminal.
+Instale o Expo Go, leia o QR do terminal. Celular e máquina na mesma Wi-Fi.
 Na home devem aparecer os times do seed (Produto, Engenharia, Design).
 “Todas as tarefas” lista as 10 tarefas, inclusive a sem time.
+
+Se o app no **celular** não achar a API (timeout, “não foi possível conectar”),
+não insista no `localhost`. Abra um emulador pelo **Android Studio**, instale o
+**Expo Go** nele e leia o mesmo QR (ou `npx expo start` e a tecla `a`). Continua
+sendo Expo Go, só que no emulador. Aí `localhost` do Mac vira `10.0.2.2` para o
+Android: se ainda falhar, no `.env` do app use
+`EXPO_PUBLIC_API_URL=http://10.0.2.2:3000` e rode `npx expo start -c`.
 
 Detalhes do ambiente (Docker vs `start:dev`, migrations, cURL, ADRs) ficam nas
 seções seguintes.
@@ -88,7 +102,8 @@ avaliacao-claro/
 ## App mobile
 
 Eu subi o app para avaliação pelo **Expo Go**: Metro na máquina, QR no celular. Quem
-valida testa no próprio aparelho, sem Android Studio, Xcode ou emulador.
+valida testa no próprio aparelho. Android Studio só entra se o celular não alcançar
+a API — e mesmo aí o app continua no Expo Go, só que no emulador.
 
 ```bash
 cd app-team-management
@@ -97,8 +112,13 @@ npx expo start
 ```
 
 Instale o [Expo Go](https://expo.dev/go) no celular, na mesma rede da máquina, e leia o
-QR do terminal. A API precisa estar no ar; o app usa o host do Metro para achar
-`http://<host>:3000`, então aparelho físico funciona sem configurar URL.
+QR do terminal. A API precisa estar no ar. **Não** coloque
+`EXPO_PUBLIC_API_URL=http://localhost:3000`: no telefone isso aponta para o próprio
+aparelho. Sem a variável, o app usa o host do Metro (`http://<host>:3000`).
+
+Se o celular não conectar (rede isolada, timeout), use o emulador do Android Studio
+com Expo Go (`npx expo start`, tecla `a`). No emulador a máquina é `10.0.2.2`.
+Depois de editar o `.env`, `npx expo start -c` — o Metro cacheia o valor.
 
 O `eas.json` e o projeto no [expo.dev](https://expo.dev) já estão configurados. O
 ciclo local continua Expo Go (Metro + QR). Além disso tem um APK de preview no
