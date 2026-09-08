@@ -6,7 +6,7 @@ export const taskCardStyles = tv({
     head: 'flex-row items-start justify-between gap-3',
     heading: 'flex-1 gap-0.5',
     title: 'text-base font-bold text-content',
-    teamName: 'text-xs text-content-muted',
+    teams: 'flex-row flex-wrap gap-1.5 pt-1',
     badge: 'rounded-full px-3 py-1',
     badgeLabel: 'text-xs font-bold text-content',
     description: 'text-sm leading-5 text-content-muted',

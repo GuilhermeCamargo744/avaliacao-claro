@@ -2,6 +2,7 @@ import { Pressable, Text, View, type PressableProps } from 'react-native';
 
 import { taskCardStyles } from './styles';
 
+import { TeamChip } from '@/components/team-chip/team-chip';
 import { TASK_STATUS_LABEL } from '@/constants/task-status';
 import type { TaskStatus, TaskTeam } from '@/models/tasks/interface-tasks';
 
@@ -20,7 +21,13 @@ export const TaskCard = ({ title, teams, description, status, ...rest }: TaskCar
       <View className={styles.head()}>
         <View className={styles.heading()}>
           <Text className={styles.title()}>{title}</Text>
-          <Text className={styles.teamName()}>{teams.map((team) => team.name).join(', ')}</Text>
+          {teams.length > 0 ? (
+            <View className={styles.teams()}>
+              {teams.map((team) => (
+                <TeamChip key={team.id} name={team.name} colorHex={team.colorHex} />
+              ))}
+            </View>
+          ) : null}
         </View>
 
         <View className={styles.badge()}>

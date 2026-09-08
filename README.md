@@ -13,11 +13,23 @@ avaliacao-claro/
 
 ## App mobile
 
+O app sobe local com o Metro e abre no celular pelo **Expo Go** — é o caminho da
+avaliação, para o validador testar no próprio aparelho sem Android Studio, Xcode ou
+emulador.
+
 ```bash
 cd app-team-management
 npm install
 npx expo start
 ```
+
+Instale o [Expo Go](https://expo.dev/go) no celular, na mesma rede da máquina, e leia o
+QR do terminal. A API precisa estar no ar; o app usa o host do Metro para achar
+`http://<host>:3000`, então aparelho físico funciona sem configurar URL.
+
+O `eas.json` e o projeto no [expo.dev](https://expo.dev) já estão configurados. Não
+enviamos builds pela EAS neste fluxo: cada validação viraria espera de build. O teste
+permanece local (Metro + Expo Go). Detalhes em [ADR 0010](adr/0010-expo-go-para-validacao-local.md).
 
 ## Back-end
 
@@ -233,7 +245,9 @@ paginação por `offset` degrada em páginas distantes; trocaria por cursor, que
 suporta.
 
 **Entrega.** Falta pipeline. Entraria CI rodando lint, testes e build a cada PR, com as
-migrations aplicadas no release antes de subir a nova versão da imagem.
+migrations aplicadas no release antes de subir a nova versão da imagem. No app, o
+`eas.json` e o projeto no Expo já existem; em produção o passo seguinte seria EAS Build
+— na avaliação o teste continua local, pelo Expo Go.
 
 ## Decisões do projeto
 
@@ -346,3 +360,16 @@ servidor não entra no store.
 caso com menos cerimônia; o custo aqui é um slice de uma string.
 
 Detalhes: [ADR 0009](adr/0009-redux-toolkit-para-estado-global.md)
+
+### 10. Entrega do app: Expo Go, teste local
+
+Quem avalia roda o app no celular pelo **Expo Go**. O Metro sobe na máquina
+(`npx expo start`) e o aparelho abre o projeto pelo QR. O `eas.json` e o projeto no
+Expo já estão configurados, mas **não** usamos EAS Build no fluxo da avaliação.
+
+**Motivo:** o Expo Go evita toolchain nativa e deixa o validador testar no próprio
+dispositivo. Levar o app a builds na nuvem seria um passo de produto, e cada mudança
+viraria fila de build e revalidação — tempo demais para o ciclo desta atividade. O teste
+permanece local.
+
+Detalhes: [ADR 0010](adr/0010-expo-go-para-validacao-local.md)

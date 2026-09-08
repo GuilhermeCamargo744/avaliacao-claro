@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Modal, Pressable, ScrollView, Text, View } from 'react-native';
+import { Keyboard, Modal, Pressable, ScrollView, Text, View } from 'react-native';
 
 import { selectFieldStyles } from './styles';
 
@@ -35,7 +35,10 @@ export const SelectField = ({ label, placeholder, options, value, onChange }: Se
         <Pressable
           accessibilityRole="button"
           accessibilityLabel={label}
-          onPress={() => setOpen(true)}
+          onPress={() => {
+            Keyboard.dismiss();
+            setOpen(true);
+          }}
           className={styles.base()}>
           <Text className={styles.label()}>{selected?.label ?? placeholder}</Text>
           <Icon name="chevron-down" size={20} className={styles.icon()} />

@@ -16,6 +16,7 @@ contexto, a decisão tomada, a justificativa e as consequências.
 | [0007](0007-nativewind-para-estilizacao.md) | NativeWind para estilização | Aceito |
 | [0008](0008-arquitetura-em-ecossistemas-no-mobile.md) | Arquitetura em ecossistemas no mobile | Aceito |
 | [0009](0009-redux-toolkit-para-estado-global.md) | Redux Toolkit para estado global de UI | Aceito |
+| [0010](0010-expo-go-para-validacao-local.md) | Expo Go para validação local no dispositivo | Aceito |
 
 ## Como adicionar uma nova decisão
 

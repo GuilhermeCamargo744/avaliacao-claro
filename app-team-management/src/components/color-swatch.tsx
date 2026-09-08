@@ -17,6 +17,7 @@ const colorSwatchStyles = tv({
       red: 'bg-team-red',
     },
     size: {
+      sm: 'h-3.5 w-3.5',
       md: 'h-6 w-6',
       lg: 'h-11 w-11',
     },
@@ -31,7 +32,7 @@ const colorSwatchStyles = tv({
 
 export type ColorSwatchProps = {
   tone: TeamTone;
-  size?: 'md' | 'lg';
+  size?: 'sm' | 'md' | 'lg';
   selected?: boolean;
   className?: string;
 };

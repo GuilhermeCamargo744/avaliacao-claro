@@ -13,7 +13,7 @@ export const viewTeamTasksStyles = tv({
     bodyContent: 'gap-6 pb-12',
     title: 'text-2xl font-bold text-content',
     description: 'text-base text-content-muted',
-    teams: 'text-sm text-content-muted',
+    teams: 'flex-row flex-wrap gap-2 pt-1',
     section: 'gap-2',
     sectionLabel: 'px-1 text-sm text-content-muted',
     statusOption: 'items-center rounded-lg bg-sunken py-4 active:opacity-80',
