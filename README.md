@@ -2,8 +2,31 @@
 
 Monorepo da avaliação Claro: app mobile (Expo) e API (NestJS).
 
-Escrevi o passo a passo abaixo na ordem em que eu mesmo subo o projeto para testar —
-API com seed primeiro, app depois. O mesmo texto está em
+Há dois jeitos de avaliar. O código da `main` é o teste técnico **local** (Docker +
+Expo Go). Em paralelo eu subi a API no Render (plano gratuito) e um APK Android de
+preview, para quem quiser abrir o app sem deixar nada rodando no computador.
+Detalhes em [ADR 0011](adr/0011-api-no-render-e-apk-de-preview.md).
+
+## Avaliar pelo APK (Android)
+
+1. No celular, abra o build no Expo e baixe o APK:
+   [Download do APK no expo.dev](https://expo.dev/accounts/guihc744/projects/app-team-management/builds/2935c01c-89f0-40d0-928e-7a2c6668eb79)
+2. Autorize a instalação de fontes desconhecidas, se o Android pedir, e instale.
+3. Abra o app. Ele já aponta para a API
+   `https://team-management-api-9w3j.onrender.com` (3 times e 10 tarefas no seed).
+
+> **O Render free desliga o servidor depois de ~15 min sem tráfego.** A primeira
+> requisição depois disso leva cerca de **1 minuto** para acordar (às vezes 50 s
+> ou mais). O app espera 10 s e mostra timeout. Não é a API caída: espere um pouco
+> e faça o GET de novo — puxe a lista para atualizar, ou saia e volte na tela.
+> Se a home vier vazia na primeira abertura, tente outra vez.
+
+O Postgres gratuito **expira 30 dias** após a criação (por volta de **08/10/2026**).
+
+Arquivo direto, se a página do Expo não abrir:
+[APK](https://expo.dev/artifacts/eas/kvKWYqnx27eGjbu3A_bApqk3yJsfXT-GkzraRSHyybU.apk).
+
+O passo a passo local (clonar, Docker, Expo Go) continua abaixo e em
 [COMO-RODAR-PROJETO.md](COMO-RODAR-PROJETO.md).
 
 ## Como rodar (primeira vez)
@@ -77,9 +100,11 @@ Instale o [Expo Go](https://expo.dev/go) no celular, na mesma rede da máquina, 
 QR do terminal. A API precisa estar no ar; o app usa o host do Metro para achar
 `http://<host>:3000`, então aparelho físico funciona sem configurar URL.
 
-O `eas.json` e o projeto no [expo.dev](https://expo.dev) já estão configurados. Não
-envio build pela EAS neste fluxo: cada validação viraria espera de fila. O teste
-permanece local (Metro + Expo Go). Detalhes em [ADR 0010](adr/0010-expo-go-para-validacao-local.md).
+O `eas.json` e o projeto no [expo.dev](https://expo.dev) já estão configurados. O
+ciclo local continua Expo Go (Metro + QR). Além disso tem um APK de preview no
+Expo, apontando para a API no Render — ver a seção [Avaliar pelo APK](#avaliar-pelo-apk-android)
+e [ADR 0011](adr/0011-api-no-render-e-apk-de-preview.md). O recorte local está na
+[ADR 0010](adr/0010-expo-go-para-validacao-local.md).
 
 ## Back-end
 
@@ -303,8 +328,9 @@ suporta.
 
 **Entrega.** Falta pipeline. Entraria CI rodando lint, testes e build a cada PR, com as
 migrations aplicadas no release antes de subir a nova versão da imagem. No app, o
-`eas.json` e o projeto no Expo já existem; em produção o passo seguinte seria EAS Build
-— na avaliação o teste continua local, pelo Expo Go.
+`eas.json` e o projeto no Expo já existem; em produção o passo seguinte seria EAS
+production. Na avaliação o ciclo de desenvolvimento continua local (Expo Go). O APK
+de preview e a API no Render são um extra — [ADR 0011](adr/0011-api-no-render-e-apk-de-preview.md).
 
 ## Decisões do projeto
 
@@ -426,11 +452,23 @@ Detalhes: [ADR 0009](adr/0009-redux-toolkit-para-estado-global.md)
 
 ### 10. Entrega do app: Expo Go, teste local
 
-Quem avalia roda o app no celular pelo **Expo Go**. Metro na máquina, QR no aparelho.
-O `eas.json` e o projeto no Expo já estão configurados; **não** envio build pela EAS
-neste fluxo.
+Quem avalia no fluxo local roda o app no celular pelo **Expo Go**. Metro na máquina,
+QR no aparelho. Cada mudança do dia a dia não entra em fila de build.
 
-**Motivo:** Expo Go evita Android Studio/Xcode. Build na nuvem seria passo de produto, e
-cada mudança viraria fila de build. Mantive o teste local.
+**Motivo:** Expo Go evita Android Studio/Xcode. O ciclo local é o que a atividade pede.
 
 Detalhes: [ADR 0010](adr/0010-expo-go-para-validacao-local.md)
+
+### 11. API no Render e APK de preview
+
+Além do local, subi a API no **Render gratuito** (Postgres 17 + Docker, Oregon) e
+um **APK Android** de preview no Expo. A `main` não leva esse deploy: ela continua o
+clone + Docker. Quem for só validar no celular instala o APK e fala com
+`https://team-management-api-9w3j.onrender.com`.
+
+**Motivo:** avaliar sem deixar a máquina ligada. Aceitei o cold start do plano free
+(o web dorme em 15 min; a primeira chamada demora ~1 min e o app pode dar timeout —
+é só repetir o GET) e a expiração do banco em 30 dias (por volta de 08/10/2026).
+Não cadastrei cartão; por isso descartei Northflank e o plano pago do próprio Render.
+
+Detalhes: [ADR 0011](adr/0011-api-no-render-e-apk-de-preview.md)

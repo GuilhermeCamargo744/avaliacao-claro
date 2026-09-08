@@ -20,6 +20,7 @@ e um novo arquivo entra na sequência.
 | [0008](0008-arquitetura-em-ecossistemas-no-mobile.md) | Arquitetura em ecossistemas no mobile | Aceito |
 | [0009](0009-redux-toolkit-para-estado-global.md) | Redux Toolkit para estado global de UI | Aceito |
 | [0010](0010-expo-go-para-validacao-local.md) | Expo Go para validação local no dispositivo | Aceito |
+| [0011](0011-api-no-render-e-apk-de-preview.md) | API no Render e APK de preview para avaliação remota | Aceito |
 
 ## Como adicionar uma nova decisão
 
