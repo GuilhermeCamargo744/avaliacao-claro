@@ -9,6 +9,11 @@ export interface TeamResponse {
   updatedAt: string;
 }
 
+export interface TeamsPageResponse {
+  data: TeamResponse[];
+  meta: { total: number; limit: number; offset: number };
+}
+
 export interface Team {
   id: string;
   name: string;
@@ -16,6 +21,10 @@ export interface Team {
   description: string | null;
   createdAt: string;
   updatedAt: string;
+}
+
+export interface ListTeamsFilters {
+  search?: string;
 }
 
 export interface CreateTeamInput {

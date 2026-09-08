@@ -12,8 +12,10 @@ export const createTeamTasksStyles = tv({
     title: 'text-2xl font-bold text-content',
     subtitle: 'text-base text-content-muted',
     form: 'gap-3 pt-10',
-    input: 'rounded-lg bg-sunken px-5 py-5 text-base text-content placeholder:text-content-muted',
-    textArea: 'h-32 rounded-lg bg-sunken px-5 py-4 text-base text-content placeholder:text-content-muted',
+    input:
+      'rounded-lg bg-sunken px-5 py-5 pl-5 text-base text-content placeholder:text-content-muted',
+    textArea:
+      'h-32 rounded-lg bg-sunken px-5 py-4 pl-5 text-base text-content placeholder:text-content-muted',
     fieldError: 'px-1 text-sm text-danger',
     submit: 'mt-3 items-center justify-center rounded-lg bg-accent py-4 active:opacity-80',
     submitLabel: 'text-base font-bold text-on-accent',

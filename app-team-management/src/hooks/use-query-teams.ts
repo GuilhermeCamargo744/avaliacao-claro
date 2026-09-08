@@ -7,7 +7,12 @@ import { postTeams } from '@/models/teams/post-teams';
 
 const TEAMS_KEY = ['teams'];
 
-export const useTeamsQuery = () => useQuery({ queryKey: TEAMS_KEY, queryFn: getTeams });
+export const useTeamsQuery = (search?: string) =>
+  useQuery({
+    queryKey: [...TEAMS_KEY, { search }],
+    queryFn: () => getTeams({ search }),
+    placeholderData: (previous) => previous,
+  });
 
 export const useTeamQuery = (id: string) =>
   useQuery({ queryKey: [...TEAMS_KEY, id], queryFn: () => getTeam(id) });

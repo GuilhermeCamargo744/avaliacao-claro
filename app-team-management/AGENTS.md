@@ -70,9 +70,12 @@ desestruturar devolve `undefined` em release.
   body campo a campo, nunca espalhe o estado do formulário.
 - Erro sempre `{ error: { code, message, details? } }`. O interceptor já extrai o `message`.
 - Sem CORS. Expo Web não consegue chamar a API; nativo não é afetado.
-- `GET /teams` não tem paginação, busca nem `ORDER BY`. Filtro e ordenação são client-side.
-- `GET /tasks` tem: aceita `teamId`, `status`, `search`, `sort`, `order`, `limit`, `offset` e
-  responde `{ data, meta: { total, limit, offset } }`. Filtre no servidor, não no cliente.
+- `GET /teams` e `GET /tasks` respondem `{ data, meta }`. O `models/` desembrulha e o resto
+  do app continua vendo array. Times já vêm ordenados por nome, então não ordene de novo.
+- **Filtro e busca são sempre do servidor**, nas duas features. `GET /teams` aceita
+  `search` (nome e descrição), `limit` e `offset`; `GET /tasks` aceita `teamId`, `status`,
+  `search`, `sort`, `order`, `limit` e `offset`. Campo de busca passa por
+  `useDebouncedValue` antes de virar query, senão sai uma requisição por tecla.
 - Tarefa tem N:N com time (`teams[]` na resposta, `teamIds[]` no corpo).
 - `colorHex` é `#RRGGBB` livre, o app usa tom da paleta. `constants/team-colors.ts` faz as
   duas conversões, com fallback para cor fora da paleta.

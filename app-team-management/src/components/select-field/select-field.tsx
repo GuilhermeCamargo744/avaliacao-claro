@@ -11,13 +11,14 @@ export type SelectOption = {
 };
 
 export type SelectFieldProps = {
+  label: string;
   placeholder: string;
   options: readonly SelectOption[];
   value?: string;
   onChange: (value: string) => void;
 };
 
-export const SelectField = ({ placeholder, options, value, onChange }: SelectFieldProps) => {
+export const SelectField = ({ label, placeholder, options, value, onChange }: SelectFieldProps) => {
   const [isOpen, setOpen] = useState(false);
   const selected = options.find((option) => option.value === value);
   const styles = selectFieldStyles({ filled: Boolean(selected) });
@@ -29,13 +30,17 @@ export const SelectField = ({ placeholder, options, value, onChange }: SelectFie
 
   return (
     <>
-      <Pressable
-        accessibilityRole="button"
-        onPress={() => setOpen(true)}
-        className={styles.base()}>
-        <Text className={styles.label()}>{selected?.label ?? placeholder}</Text>
-        <Icon name="chevron-down" size={20} className={styles.icon()} />
-      </Pressable>
+      <View className={styles.field()}>
+        <Text className={styles.caption()}>{label}</Text>
+        <Pressable
+          accessibilityRole="button"
+          accessibilityLabel={label}
+          onPress={() => setOpen(true)}
+          className={styles.base()}>
+          <Text className={styles.label()}>{selected?.label ?? placeholder}</Text>
+          <Icon name="chevron-down" size={20} className={styles.icon()} />
+        </Pressable>
+      </View>
 
       <Modal visible={isOpen} transparent animationType="slide" onRequestClose={() => setOpen(false)}>
         <Pressable

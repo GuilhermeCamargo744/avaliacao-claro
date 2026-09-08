@@ -133,6 +133,7 @@ export const EditTeamTasksView = ({
               name="teamId"
               render={({ field }) => (
                 <SelectField
+                  label="Selecione um time"
                   placeholder="Selecione um time"
                   options={teamOptions}
                   value={field.value}
@@ -149,6 +150,7 @@ export const EditTeamTasksView = ({
               name="status"
               render={({ field }) => (
                 <SelectField
+                  label="Selecione um status"
                   placeholder="Selecione um status"
                   options={statusOptions}
                   value={field.value}
