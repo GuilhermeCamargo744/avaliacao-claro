@@ -1,6 +1,7 @@
 import { Controller, type Control, type FieldErrors } from 'react-hook-form';
 import {
   ActivityIndicator,
+  Keyboard,
   KeyboardAvoidingView,
   Pressable,
   ScrollView,
@@ -86,92 +87,98 @@ export const EditTeamTasksView = ({
           className={styles.content()}
           contentContainerClassName={styles.contentContainer()}
           keyboardShouldPersistTaps="handled"
+          keyboardDismissMode="on-drag"
           showsVerticalScrollIndicator={false}>
-          <View className={styles.hero()}>
-            <Icon name="checkbox-outline" size={48} className={styles.heroIcon()} />
-            <Text className={styles.title()}>Editar tarefa</Text>
-            <Text className={styles.subtitle()}>atualize os dados da tarefa</Text>
-          </View>
+          <Pressable
+            accessible={false}
+            onPress={Keyboard.dismiss}
+            className={styles.dismissLayer()}>
+            <View className={styles.hero()}>
+              <Icon name="checkbox-outline" size={48} className={styles.heroIcon()} />
+              <Text className={styles.title()}>Editar tarefa</Text>
+              <Text className={styles.subtitle()}>atualize os dados da tarefa</Text>
+            </View>
 
-          <View className={styles.form()}>
-            <Controller
-              control={control}
-              name="title"
-              render={({ field }) => (
-                <TextInput
-                  className={styles.input()}
-                  placeholder="Título"
-                  value={field.value}
-                  onChangeText={field.onChange}
-                  onBlur={field.onBlur}
-                  maxLength={120}
-                />
-              )}
-            />
-            {errors.title ? (
-              <Text className={styles.fieldError()}>{errors.title.message}</Text>
-            ) : null}
+            <View className={styles.form()}>
+              <Controller
+                control={control}
+                name="title"
+                render={({ field }) => (
+                  <TextInput
+                    className={styles.input()}
+                    placeholder="Título"
+                    value={field.value}
+                    onChangeText={field.onChange}
+                    onBlur={field.onBlur}
+                    maxLength={120}
+                  />
+                )}
+              />
+              {errors.title ? (
+                <Text className={styles.fieldError()}>{errors.title.message}</Text>
+              ) : null}
 
-            <Controller
-              control={control}
-              name="description"
-              render={({ field }) => (
-                <TextInput
-                  className={styles.textArea()}
-                  placeholder="Descrição"
-                  value={field.value}
-                  onChangeText={field.onChange}
-                  onBlur={field.onBlur}
-                  multiline
-                  textAlignVertical="top"
-                />
-              )}
-            />
+              <Controller
+                control={control}
+                name="description"
+                render={({ field }) => (
+                  <TextInput
+                    className={styles.textArea()}
+                    placeholder="Descrição"
+                    value={field.value}
+                    onChangeText={field.onChange}
+                    onBlur={field.onBlur}
+                    multiline
+                    textAlignVertical="top"
+                  />
+                )}
+              />
 
-            <Controller
-              control={control}
-              name="teamId"
-              render={({ field }) => (
-                <SelectField
-                  label="Selecione um time"
-                  placeholder="Selecione um time"
-                  options={teamOptions}
-                  value={field.value}
-                  onChange={field.onChange}
-                />
-              )}
-            />
-            {errors.teamId ? (
-              <Text className={styles.fieldError()}>{errors.teamId.message}</Text>
-            ) : null}
+              <Controller
+                control={control}
+                name="teamId"
+                render={({ field }) => (
+                  <SelectField
+                    label="Selecione um time"
+                    placeholder="Selecione um time"
+                    options={teamOptions}
+                    value={field.value}
+                    onChange={field.onChange}
+                  />
+                )}
+              />
+              {errors.teamId ? (
+                <Text className={styles.fieldError()}>{errors.teamId.message}</Text>
+              ) : null}
 
-            <Controller
-              control={control}
-              name="status"
-              render={({ field }) => (
-                <SelectField
-                  label="Selecione um status"
-                  placeholder="Selecione um status"
-                  options={statusOptions}
-                  value={field.value}
-                  onChange={field.onChange}
-                />
-              )}
-            />
+              <Controller
+                control={control}
+                name="status"
+                render={({ field }) => (
+                  <SelectField
+                    label="Selecione um status"
+                    placeholder="Selecione um status"
+                    options={statusOptions}
+                    value={field.value}
+                    onChange={field.onChange}
+                  />
+                )}
+              />
 
-            <Pressable
-              accessibilityRole="button"
-              accessibilityState={{ busy: isSubmitting }}
-              disabled={isBusy}
-              onPress={onSubmit}
-              className={styles.submit()}>
-              {isSubmitting ? (
-                <ActivityIndicator />
-              ) : (
-                <Text className={styles.submitLabel()}>Salvar</Text>
-              )}
-            </Pressable>
-          </View>
+              <Pressable
+                accessibilityRole="button"
+                accessibilityState={{ busy: isSubmitting }}
+                disabled={isBusy}
+                onPress={onSubmit}
+                className={styles.submit()}>
+                {isSubmitting ? (
+                  <ActivityIndicator />
+                ) : (
+                  <Text className={styles.submitLabel()}>Salvar</Text>
+                )}
+              </Pressable>
+            </View>
+          </Pressable>
         </ScrollView>
       )}
     </KeyboardAvoidingView>

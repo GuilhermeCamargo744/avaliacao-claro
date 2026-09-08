@@ -7,6 +7,7 @@ export const createTeamTasksStyles = tv({
     backIcon: 'text-content',
     content: 'flex-1',
     contentContainer: 'grow justify-center pb-12',
+    dismissLayer: 'grow',
     hero: 'items-center gap-1',
     heroIcon: 'mb-3 text-accent',
     title: 'text-2xl font-bold text-content',

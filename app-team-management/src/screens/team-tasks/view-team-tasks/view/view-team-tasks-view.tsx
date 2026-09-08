@@ -3,6 +3,7 @@ import { ActivityIndicator, Pressable, ScrollView, Text, View } from 'react-nati
 import { viewTeamTasksStyles } from './styles';
 
 import { Icon } from '@/components/icon';
+import { TeamChip } from '@/components/team-chip/team-chip';
 import type { TaskStatus, TaskTeam } from '@/models/tasks/interface-tasks';
 
 export type ViewTeamTasksViewProps = {
@@ -95,7 +96,11 @@ export const ViewTeamTasksView = ({
             <Text className={styles.title()}>{title}</Text>
             {description ? <Text className={styles.description()}>{description}</Text> : null}
             {teams.length > 0 ? (
-              <Text className={styles.teams()}>{teams.map((team) => team.name).join(', ')}</Text>
+              <View className={styles.teams()}>
+                {teams.map((team) => (
+                  <TeamChip key={team.id} name={team.name} colorHex={team.colorHex} />
+                ))}
+              </View>
             ) : null}
           </View>
 
