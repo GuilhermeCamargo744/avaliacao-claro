@@ -67,6 +67,10 @@ npm install
 npx expo start
 ```
 
+O `eas.json` tem perfil de development client. Se o terminal abrir em
+**development build** e pedir um binário nativo, aperte **`s`** para mudar
+para o **Expo Go**. É o caminho desta avaliação.
+
 Não preencha `EXPO_PUBLIC_API_URL` com `http://localhost:3000`. No Expo Go do
 celular, `localhost` é o **aparelho**, não o computador — a API some. Sem essa
 variável o app usa o host do Metro (`http://<ip-da-máquina>:3000`). O
@@ -110,6 +114,8 @@ cd app-team-management
 npm install
 npx expo start
 ```
+
+Se o Metro sugerir development build, aperte **`s`** para o Expo Go.
 
 Instale o [Expo Go](https://expo.dev/go) no celular, na mesma rede da máquina, e leia o
 QR do terminal. A API precisa estar no ar. **Não** coloque

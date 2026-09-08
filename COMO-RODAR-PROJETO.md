@@ -41,6 +41,9 @@ npm install
 npx expo start
 ```
 
+Se o terminal abrir em **development build** (por causa do `eas.json`), aperte
+**`s`** para trocar para o **Expo Go**. Não precisa gerar o build de desenvolvimento.
+
 Não defina `EXPO_PUBLIC_API_URL=http://localhost:3000`. No Expo Go do celular,
 `localhost` é o aparelho, não o computador — a chamada nunca chega na API. Sem
 essa variável o app pega o IP do Metro. Se você já tinha colocado `localhost` no
