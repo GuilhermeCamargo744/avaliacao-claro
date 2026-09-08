@@ -39,6 +39,8 @@ export interface ListTasksFilters {
   teamId?: string;
   status?: TaskStatus;
   search?: string;
+  limit?: number;
+  offset?: number;
 }
 
 export interface CreateTaskInput {

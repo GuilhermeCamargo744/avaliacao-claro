@@ -1,9 +1,9 @@
 import { ActivityIndicator, Pressable, ScrollView, Text, View } from 'react-native';
 
-import { SearchField } from '../components/search-field/search-field';
 import { TeamCard } from '../components/team-card/team-card';
 import { homeStyles } from './styles';
 
+import { SearchField } from '@/components/search-field/search-field';
 import type { TeamTone } from '@/constants/team-colors';
 
 export type HomeTeam = {
