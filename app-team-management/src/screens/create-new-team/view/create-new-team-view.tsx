@@ -8,10 +8,10 @@ import {
   View,
 } from 'react-native';
 
-import { ColorField } from '../components/color-field/color-field';
-import { ColorPicker } from '../components/color-picker/color-picker';
 import { createNewTeamStyles } from './styles';
 
+import { ColorField } from '@/components/color-field/color-field';
+import { ColorPicker } from '@/components/color-picker/color-picker';
 import { Icon } from '@/components/icon';
 import type { TeamTone } from '@/constants/team-colors';
 

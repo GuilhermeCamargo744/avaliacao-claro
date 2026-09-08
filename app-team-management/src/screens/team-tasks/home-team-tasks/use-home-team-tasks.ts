@@ -12,6 +12,7 @@ export const useHomeTeamTasks = () => {
     isLoading: isPending,
     errorMessage: error?.message ?? null,
     onBack: () => router.back(),
+    onEditTeam: () => router.push(`/edit-team/${id}`),
     onCreateTask: () => router.push('/create-task'),
     onEditTask: (taskId: string) => router.push(`/edit-task/${taskId}`),
   };

@@ -31,3 +31,9 @@ export interface CreateTeamInput {
   name: string;
   tone: TeamTone;
 }
+
+export interface UpdateTeamInput {
+  id: string;
+  name: string;
+  tone: TeamTone;
+}

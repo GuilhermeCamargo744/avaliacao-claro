@@ -23,5 +23,6 @@ export const useHome = () => {
         onRetry: () => { void refetch() },
         onCreateTeam: () => router.push("/create-new-team"),
         onOpenTeam: (id: string) => router.push(`/team-tasks/${id}`),
+        onEditTeam: (id: string) => router.push(`/edit-team/${id}`),
     }
 }

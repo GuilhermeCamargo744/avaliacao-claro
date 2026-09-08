@@ -11,6 +11,7 @@ export type HomeTeamTasksViewProps = {
   isLoading: boolean;
   errorMessage: string | null;
   onBack: () => void;
+  onEditTeam: () => void;
   onCreateTask: () => void;
   onEditTask: (taskId: string) => void;
 };
@@ -20,6 +21,7 @@ export const HomeTeamTasksView = ({
   isLoading,
   errorMessage,
   onBack,
+  onEditTeam,
   onCreateTask,
   onEditTask,
 }: HomeTeamTasksViewProps) => {
@@ -27,13 +29,23 @@ export const HomeTeamTasksView = ({
 
   return (
     <View className={styles.base()}>
-      <Pressable
-        accessibilityRole="button"
-        accessibilityLabel="Voltar"
-        onPress={onBack}
-        className={styles.backButton()}>
-        <Icon name="chevron-back" size={28} className={styles.backIcon()} />
-      </Pressable>
+      <View className={styles.topBar()}>
+        <Pressable
+          accessibilityRole="button"
+          accessibilityLabel="Voltar"
+          onPress={onBack}
+          className={styles.backButton()}>
+          <Icon name="chevron-back" size={28} className={styles.backIcon()} />
+        </Pressable>
+
+        <Pressable
+          accessibilityRole="button"
+          accessibilityLabel="Editar time"
+          onPress={onEditTeam}
+          className={styles.editButton()}>
+          <Icon name="create-outline" size={26} className={styles.editIcon()} />
+        </Pressable>
+      </View>
 
       <View className={styles.header()}>
         <Text className={styles.title()}>Tarefas</Text>
