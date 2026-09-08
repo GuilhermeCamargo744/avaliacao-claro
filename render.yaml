@@ -2,9 +2,13 @@
 # A main permanece o teste técnico local, sem deploy.
 #
 # No dashboard: New → Blueprint → este repositório → branch feat/render-deploy.
+#
+# Plano gratuito: o web dorme após 15 min de inatividade (~1 min para acordar)
+# e o Postgres free expira 30 dias após a criação.
 
 databases:
   - name: team-management-db
+    plan: free
     postgresMajorVersion: "17"
     databaseName: team_management
 
@@ -12,11 +16,11 @@ services:
   - type: web
     name: team-management-api
     runtime: docker
+    plan: free
     branch: feat/render-deploy
     dockerfilePath: ./back-end-team-management/Dockerfile
     dockerContext: ./back-end-team-management
     healthCheckPath: /health
-    initialDeployHook: node dist/prisma/seed.js
     envVars:
       - key: NODE_ENV
         value: production

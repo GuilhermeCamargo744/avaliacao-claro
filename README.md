@@ -1,8 +1,10 @@
 # avaliacao-claro
 
-> **Branch `feat/render-deploy`.** Esta branch é o deploy da API no Render.
-> A `main` permanece o teste técnico local, sem deploy.
-> Passo a passo: [DEPLOY-RENDER.md](DEPLOY-RENDER.md).
+> **Branch `feat/render-deploy`.** Esta branch é o deploy da API no Render
+> (Postgres 17 free + API Docker free). A `main` permanece o teste técnico local,
+> sem deploy. Seed é manual, na máquina, contra a External Database URL. Depois
+> de 15 min sem tráfego o web dorme (~1 min para acordar). O Postgres free
+> expira 30 dias após a criação. Passo a passo: [DEPLOY-RENDER.md](DEPLOY-RENDER.md).
 
 Monorepo da avaliação Claro: app mobile (Expo) e API (NestJS).
 
