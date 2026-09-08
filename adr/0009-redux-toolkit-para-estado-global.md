@@ -6,8 +6,9 @@
 
 ## Contexto
 
-A home tem um campo de busca cujo texto precisa continuar lá quando o usuário volta de
-outra tela. Isso é estado de UI, não de servidor — não cabe no React Query
+A home tem um campo de busca cujo texto precisa continuar lá quando a pessoa volta de
+outra tela (abre um time, volta, o termo ainda está lá). Isso é estado de UI, não de
+servidor — não cabe no React Query
 ([ADR 0006](0006-react-query-para-requisicoes-e-cache.md)). As alternativas eram Zustand,
 Context e Redux Toolkit.
 
@@ -15,6 +16,10 @@ Context e Redux Toolkit.
 
 **Redux Toolkit** guarda o estado global de UI. Hoje há um slice só: o termo de busca da
 home (`searchTermChanged` / `selectSearchTerm`). Dado de servidor não entra no store.
+
+A busca da lista de tarefas **não** entra no Redux. Ela vive em `useState` na própria
+tela. Eu só globalizei o que sobrevive à navegação; o filtro de tarefa some ao sair, e
+isso me bastou.
 
 ## Justificativa
 
@@ -27,7 +32,7 @@ home (`searchTermChanged` / `selectSearchTerm`). Dado de servidor não entra no 
   primitivo, `configureStore`) reduzem decisão caseira.
 
 Zustand cobriria este caso com menos cerimônia. O Toolkit entrou pela previsibilidade e
-pelo suporte — o verboso aqui é um slice de uma string, custo aceitável.
+pelo suporte — o verboso aqui é um slice de uma string, custo que aceitei.
 
 ## Consequências
 

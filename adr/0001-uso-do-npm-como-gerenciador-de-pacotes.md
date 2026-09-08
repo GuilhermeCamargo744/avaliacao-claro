@@ -12,21 +12,20 @@ As alternativas consideradas foram npm, yarn e pnpm.
 
 ## Decisão
 
-Utilizamos o **npm** como gerenciador de pacotes dos dois projetos.
+Optei pelo **npm** nos dois projetos do monorepo.
 
 ## Justificativa
 
-- **Facilidade:** o npm já vem instalado junto com o Node.js, então todo desenvolvedor
-  JavaScript o tem disponível na máquina — não exige instalação nem configuração extra
-  para rodar o projeto.
-- **Versatilidade:** cobre bem as necessidades do projeto (instalação de dependências,
-  scripts, `npx`) sem adicionar uma ferramenta a mais na stack.
-- **Onboarding:** qualquer pessoa clona o repositório e roda `npm install` sem passos
-  prévios.
+- **Facilidade.** O npm já vem com o Node.js. Quem avalia não precisa instalar yarn nem
+  pnpm só para clonar e rodar.
+- **Versatilidade.** `npm install`, `npm run` e `npx` cobrem o que o projeto pede.
+- **Onboarding.** Pensei no testador: um gerenciador a menos na lista de pré-requisitos.
+
+Yarn e pnpm trariam lockfile mais previsível ou disco menor. Abri mão disso de propósito.
 
 ## Consequências
 
-- Os comandos documentados no README usam `npm install` / `npm run`.
-- O lockfile oficial é o `package-lock.json`; não versionamos `yarn.lock` nem `pnpm-lock.yaml`.
-- Abrimos mão de ganhos de performance e de economia de disco que pnpm ou yarn poderiam
-  trazer — trade-off aceito em favor da simplicidade.
+- Os comandos do README usam `npm install` / `npm run`.
+- O lockfile oficial é o `package-lock.json`; não versiono `yarn.lock` nem `pnpm-lock.yaml`.
+- Abri mão de performance e economia de disco que pnpm ou yarn poderiam trazer — o
+  trade-off foi simplicidade para quem avalia.

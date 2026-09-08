@@ -1,8 +1,9 @@
 # avaliacao-claro
 
-Monorepo da avaliação Claro, com o app mobile (Expo) e o back-end (NestJS).
+Monorepo da avaliação Claro: app mobile (Expo) e API (NestJS).
 
-O caminho da primeira execução está abaixo. O mesmo texto vive em
+Escrevi o passo a passo abaixo na ordem em que eu mesmo subo o projeto para testar —
+API com seed primeiro, app depois. O mesmo texto está em
 [COMO-RODAR-PROJETO.md](COMO-RODAR-PROJETO.md).
 
 ## Como rodar (primeira vez)
@@ -32,7 +33,7 @@ npm run seed
 ```
 
 Confira: no navegador ou no terminal, [http://localhost:3000/teams](http://localhost:3000/teams)
-deve devolver JSON com 3 times.
+deve devolver `{ "data": [ ...3 times... ], "meta": { "total": 3, ... } }`.
 
 ### 3. Subir o app (outro terminal)
 
@@ -63,9 +64,8 @@ avaliacao-claro/
 
 ## App mobile
 
-O app sobe local com o Metro e abre no celular pelo **Expo Go** — é o caminho da
-avaliação, para o validador testar no próprio aparelho sem Android Studio, Xcode ou
-emulador.
+Eu subi o app para avaliação pelo **Expo Go**: Metro na máquina, QR no celular. Quem
+valida testa no próprio aparelho, sem Android Studio, Xcode ou emulador.
 
 ```bash
 cd app-team-management
@@ -78,20 +78,21 @@ QR do terminal. A API precisa estar no ar; o app usa o host do Metro para achar
 `http://<host>:3000`, então aparelho físico funciona sem configurar URL.
 
 O `eas.json` e o projeto no [expo.dev](https://expo.dev) já estão configurados. Não
-enviamos builds pela EAS neste fluxo: cada validação viraria espera de build. O teste
+envio build pela EAS neste fluxo: cada validação viraria espera de fila. O teste
 permanece local (Metro + Expo Go). Detalhes em [ADR 0010](adr/0010-expo-go-para-validacao-local.md).
 
 ## Back-end
 
-A API depende de um PostgreSQL 15+. O `docker-compose.yml` sobe o banco e a API
-juntos, então o caminho mais curto é:
+A API usa **PostgreSQL 17** (imagem `postgres:17-alpine`). O `docker-compose.yml` sobe o
+banco e a API juntos. O caminho que eu uso para avaliar:
 
 ```bash
 cd back-end-team-management
 cp .env.example .env
-npm run db:up          # sobe Postgres e API (docker compose up -d)
-npm install            # dependências locais, para rodar o CLI do Prisma
-npm run db:migrate     # aplica as migrations no banco
+npm install
+npm run db:up          # sobe Postgres e API
+npm run db:migrate     # aplica as migrations
+npm run seed           # 3 times e 10 tarefas
 ```
 
 A API fica em `http://localhost:3000` e o Postgres em `localhost:5432`.
@@ -161,11 +162,17 @@ com dados que você queira manter.
 | DELETE | `/tasks/:id` | Remove uma tarefa (204) |
 
 `GET /teams` aceita `search` (nome e descrição), `limit` (1–100, padrão 20) e `offset`
-(padrão 0), e devolve os times ordenados por nome.
+(padrão 0), e devolve os times ordenados por nome. No app a home pede `limit=100` e
+não pagina: o catálogo é pequeno. Quem pagina de verdade é a lista de tarefas.
 
 `GET /tasks` aceita `teamId`, `status` (`pending` \| `in_progress` \| `done`), `search`
-(procura em título e descrição), `sort` (`createdAt` \| `dueDate` \| `title`), `order`
-(`asc` \| `desc`), `limit` (1–100, padrão 20) e `offset` (padrão 0).
+(procura em título e descrição), `sort` (`createdAt` \| `dueDate` \| `title`, padrão
+`createdAt`), `order` (`asc` \| `desc`, padrão `desc`), `limit` (1–100, padrão 20) e
+`offset` (padrão 0). No app a lista pede `limit=10` e carrega o resto no scroll
+(`offset` seguinte).
+
+Usei **PATCH**, não PUT: a atualização é parcial (só status, só nome, só os times). O
+enunciado deixa o formato livre.
 
 As duas listagens respondem com o mesmo envelope de paginação:
 
@@ -262,9 +269,9 @@ servidor — detalhe interno não vaza na resposta.
 
 ## O que faria diferente em produção
 
-O projeto roda local e é otimizado para ser avaliado rápido. Estes são os pontos que
-mudariam antes de ir para produção — os quatro primeiros são falhas conhecidas e
-verificadas neste código, não hipóteses.
+O projeto roda local e eu otimizei para ser avaliado rápido. Se fosse produção, eu
+mudaria o que está abaixo. Os quatro primeiros eu já vi falhar neste código — não são
+hipótese.
 
 **Resiliência de conexão.** Hoje, se o Postgres reinicia, a API não se recupera sozinha: o
 pool fica com conexões mortas e só volta quando o processo reinicia. Em produção isso é
@@ -301,26 +308,25 @@ migrations aplicadas no release antes de subir a nova versão da imagem. No app,
 
 ## Decisões do projeto
 
-Registro das decisões técnicas tomadas ao longo do desenvolvimento, com o motivo por trás de cada uma.
-O detalhamento de cada decisão fica em [`adr/`](adr/) (Architecture Decision Records).
+Abaixo está o raciocínio que segui durante o desenvolvimento. O detalhe de cada escolha
+fica em [`adr/`](adr/).
 
 ### 1. Gerenciador de pacotes: npm
 
-Optamos pelo **npm** como gerenciador de pacotes dos dois projetos do monorepo.
+Optei pelo **npm** nos dois projetos do monorepo.
 
-**Motivo:** facilidade e versatilidade. O npm já vem instalado junto com o Node.js, então todo desenvolvedor JavaScript o tem disponível na máquina — não exige nenhuma instalação ou configuração extra para rodar o projeto.
+**Motivo:** já vem com o Node. Quem avalia não instala yarn nem pnpm só para clonar e
+rodar. Abri mão de disco/performance do pnpm de propósito.
 
 Detalhes: [ADR 0001](adr/0001-uso-do-npm-como-gerenciador-de-pacotes.md)
 
 ### 2. Framework do back-end: NestJS
 
-A API é um **NestJS 12** sobre Node 22, em TypeScript `strict` e ESM.
+A API é um **NestJS 12** sobre Node 22, TypeScript `strict` e ESM.
 
-**Motivo:** a avaliação cobra clareza arquitetural, e o Nest entrega módulos por domínio,
-injeção de dependência, pipes de validação e ferramental de teste já padronizados — com
-Express ou Fastify puros, cada um desses pontos viraria convenção caseira. A injeção de
-dependência também é o que sustenta a arquitetura hexagonal descrita adiante. O custo
-aceito é a cerimônia de decorators e um módulo por domínio.
+**Motivo:** a avaliação cobra clareza arquitetural. O Nest já traz módulo por domínio,
+injeção, pipes e teste — com Express ou Fastify puros eu montaria isso à mão. A injeção
+é o que sustenta a hexagonal. O custo que aceitei é a cerimônia dos decorators.
 
 Detalhes: [ADR 0002](adr/0002-nestjs-como-framework-do-back-end.md)
 
@@ -329,30 +335,28 @@ Detalhes: [ADR 0002](adr/0002-nestjs-como-framework-do-back-end.md)
 O banco é **PostgreSQL 17** e a camada de dados é o **Prisma Next (Prisma 8)**.
 
 **Motivo:** o domínio é relacional — uma tarefa pertence a zero ou mais times, e o banco
-garante essa integridade com chave estrangeira e cascade em vez de deixá-la na aplicação.
-Filtro, ordenação e paginação são o trabalho natural de um banco relacional, e o Prisma
-gera o cliente tipado a partir do schema, então erro de coluna quebra no `tsc`. As
-migrations são versionadas com hash de conteúdo e o banco guarda o hash do contrato
-aplicado, o que permite detectar divergência entre código e banco.
+garante isso com FK e cascade. Filtro, ordenação e paginação são trabalho de SQL. O
+Prisma gera o cliente tipado; coluna errada quebra no `tsc`. As migrations têm hash; o
+banco guarda o hash do contrato aplicado.
 
-**Modelo de dados:** `Team ──< TaskTeam >── Task`. A junção é explícita (o Prisma Next não
-aceita muitos-para-muitos implícito) e tem chave primária composta com cascade nas duas
-pontas. O `status` da tarefa é um enum (`pending`, `in_progress`, `done`) protegido por
-`CHECK` no banco.
+**Modelo:** `Team ──< TaskTeam >── Task`. A junção é explícita (o Prisma Next não aceita
+N:N implícito). `status` é enum (`pending`, `in_progress`, `done`) com `CHECK` no banco.
 
-Detalhes e o modelo completo: [ADR 0003](adr/0003-postgresql-com-prisma-next.md)
+Na API a tarefa aceita `teamIds[]`. No form do app eu deixei **um time só**: o fluxo da
+avaliação é criar a partir de um time, sem multi-select. A lista global ainda mostra
+tarefa sem time e tarefa em dois times quando elas vêm do seed. Editar uma dessas
+grava o primeiro time da lista — aceitei esse recorte de propósito.
+
+Detalhes: [ADR 0003](adr/0003-postgresql-com-prisma-next.md)
 
 ### 4. Organização do back-end: arquitetura hexagonal
 
-Cada módulo de domínio é dividido em `domain` (entidade e porta), `application` (casos de
-uso) e `infrastructure` (adaptadores Prisma e HTTP), com as dependências apontando sempre
-para dentro.
+Cada módulo tem `domain` (entidade e porta), `application` (casos de uso) e
+`infrastructure` (Prisma e HTTP). A dependência aponta para dentro.
 
-**Motivo:** manter a regra de negócio livre do ORM. O caso de uso depende de uma interface
-de repositório, não do Prisma, o que torna o teste possível com um repositório em memória
-— sem banco e sem mock framework — e reduz a troca de persistência a uma linha no módulo.
-Isso pesa porque o Prisma 8 ainda é release candidate. O custo aceito é o número maior de
-arquivos por módulo.
+**Motivo:** a regra de negócio não conhece o ORM. O teste do service usa repositório em
+memória — sem banco e sem mock framework. Isso pesou porque o Prisma 8 ainda é RC. O
+custo é mais arquivo por módulo.
 
 Detalhes: [ADR 0004](adr/0004-arquitetura-hexagonal-no-back-end.md)
 
@@ -360,66 +364,73 @@ Detalhes: [ADR 0004](adr/0004-arquitetura-hexagonal-no-back-end.md)
 
 Banco e API sobem juntos com `docker compose`, a partir de um `Dockerfile` multi-stage.
 
-**Motivo:** reprodutibilidade. Quem avalia roda um comando e recebe a mesma versão de
-Postgres com as mesmas credenciais, sem instalar nada além do Docker. O serviço da API só
-inicia depois do healthcheck do banco, o que elimina a corrida entre os dois.
+**Motivo:** quem avalia não instala Postgres. Um comando, a mesma versão, as mesmas
+credenciais. A API só sobe depois do healthcheck do banco.
 
 Detalhes: [ADR 0005](adr/0005-docker-compose-para-o-ambiente-local.md)
 
 ### 6. React Query
 
-**React Query** é dono do estado de servidor: listagens, detalhe e mutações. A tela chama
-o hook; o hook chama `src/models/`. Depois de escrever, a mutation invalida o cache.
+**React Query** é dono do estado de servidor. Detalhe usa `useQuery`. A lista de
+tarefas usa `useInfiniteQuery` (10 no primeiro request, o resto no scroll). A lista de
+times fica em `useQuery` com `limit=100` — não paginei na UI porque o catálogo é
+pequeno. Depois de escrever, a mutation invalida o cache. Filtro e busca de tarefa
+vão na API, não no array em memória: senão a busca acharia só o que já tinha sido
+baixado.
 
-**Motivo:** é uma biblioteca estável, organiza as requisições do app e o cache deixa a
-navegação mais rápida — a home não busca de novo a cada volta.
+**Motivo:** biblioteca estável, a tela não fala com o axios, e o cache evita refetch a
+cada volta na home. Não pus optimistic update: preferi a lista bater com o servidor
+depois do 200.
 
 Detalhes: [ADR 0006](adr/0006-react-query-para-requisicoes-e-cache.md)
 
 ### 7. Estilização: NativeWind
 
-As telas usam **NativeWind 5** com **tailwind-variants**. Classes ficam em `view/styles.ts`,
-nunca inline no JSX. Cores são tokens semânticos (`bg-surface`, `text-content-muted`).
+As telas usam **NativeWind 5** (ainda preview) com **tailwind-variants**. Classes em
+`view/styles.ts`; no JSX eu só chamo `styles.slot()`. Cores são tokens (`bg-surface`,
+`text-content-muted`). Entrei no preview porque o enunciado já apontava NativeWind.
 
-**Motivo:** é a biblioteca que mais tem ganhado espaço no front hoje, leva Tailwind ao
-React Native (o enunciado proíbe styled-components) e deixa a responsividade mais fácil
-de ajustar do que StyleSheet ou Dripsy.
+**Motivo:** o enunciado proíbe styled-components. Tailwind é o que o front já lê;
+NativeWind leva isso ao RN e a responsividade fica na classe, não no StyleSheet.
 
 Detalhes: [ADR 0007](adr/0007-nativewind-para-estilizacao.md)
 
 ### 8. Arquitetura em ecossistemas no mobile
 
-O app é separado por domínio (`screens/teams/`, `screens/team-tasks/`, `screens/home/`).
-Cada tela é um trio: `index.tsx` (container) + `use-[tela].ts` (lógica) + `view/`
-(apresentação). O que duas telas usam sobe para `src/components/`, `src/hooks/` ou
-`src/models/`. A view não chama API e não rompe camada.
+O app se separa por domínio (`screens/teams/`, `screens/team-tasks/`, `screens/home/`).
+Cada tela é trio: `index.tsx` + `use-[tela].ts` + `view/`. Formulário entra com React
+Hook Form + zod no hook, não na view.
 
-**Motivo:** cada ecossistema tem a sua região; arquivo, componente e tela têm uma
-responsabilidade; a hierarquia se mantém. Camadas globais existem para integrar o que é
-compartilhado, não para a tela pular direto ao axios.
+`/tasks` e `/team-tasks/[id]` reusam a mesma lista. O `id` na rota vira o filtro de
+time; o select de time só aparece na lista global. Busca e status sempre vão na API.
+O que duas telas usam sobe para `src/components/`, `src/hooks/` ou `src/models/`
+(`SearchField`, `TeamChip`). A view não chama API.
+
+**Motivo:** cada ecossistema na sua pasta; um arquivo, uma responsabilidade. Camada
+global existe para integrar o compartilhado, não para a tela importar o axios.
 
 Detalhes: [ADR 0008](adr/0008-arquitetura-em-ecossistemas-no-mobile.md)
 
 ### 9. Redux Toolkit
 
-**Redux Toolkit** guarda só estado global de UI. Hoje é o termo de busca da home. Dado de
-servidor não entra no store.
+**Redux Toolkit** guarda só estado de UI global. Hoje é o termo de busca da home —
+precisa continuar lá quando a pessoa volta de outra tela. A busca da lista de tarefas
+fica em `useState` na própria tela: se a pessoa sai, o filtro some, e isso me bastou.
 
-**Motivo:** é uma das bibliotecas de estado global mais estáveis e confiáveis do mercado.
-É verbosa, mas organizada, e tem suporte forte da comunidade. Zustand cobriria o mesmo
-caso com menos cerimônia; o custo aqui é um slice de uma string.
+Dado de servidor não entra no store.
+
+**Motivo:** estável e organizado. Zustand cobriria o mesmo caso com menos cerimônia; o
+custo aqui é um slice de uma string, e eu aceitei.
 
 Detalhes: [ADR 0009](adr/0009-redux-toolkit-para-estado-global.md)
 
 ### 10. Entrega do app: Expo Go, teste local
 
-Quem avalia roda o app no celular pelo **Expo Go**. O Metro sobe na máquina
-(`npx expo start`) e o aparelho abre o projeto pelo QR. O `eas.json` e o projeto no
-Expo já estão configurados, mas **não** usamos EAS Build no fluxo da avaliação.
+Quem avalia roda o app no celular pelo **Expo Go**. Metro na máquina, QR no aparelho.
+O `eas.json` e o projeto no Expo já estão configurados; **não** envio build pela EAS
+neste fluxo.
 
-**Motivo:** o Expo Go evita toolchain nativa e deixa o validador testar no próprio
-dispositivo. Levar o app a builds na nuvem seria um passo de produto, e cada mudança
-viraria fila de build e revalidação — tempo demais para o ciclo desta atividade. O teste
-permanece local.
+**Motivo:** Expo Go evita Android Studio/Xcode. Build na nuvem seria passo de produto, e
+cada mudança viraria fila de build. Mantive o teste local.
 
 Detalhes: [ADR 0010](adr/0010-expo-go-para-validacao-local.md)

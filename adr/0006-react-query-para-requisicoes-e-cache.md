@@ -12,10 +12,24 @@ refetch e invalidação à mão. A avaliação pede React Query para esse papel.
 
 ## Decisão
 
-**TanStack React Query** é dono de todo estado que vem do servidor. Listagens e detalhe
-passam por `useQuery`; escritas, por `useMutation`. Depois de um create/update/delete a
-mutation **invalida** a query correspondente. Dado de servidor não entra no Redux; dado de
-formulário não entra no React Query.
+**TanStack React Query** é dono de todo estado que vem do servidor.
+
+- Detalhe (`useTaskQuery`, `useTeamQuery`) passa por `useQuery`.
+- A lista de **tarefas** passa por `useInfiniteQuery`: `limit=10`, o resto no scroll
+  (`offset` seguinte). Dez itens cabem na primeira tela; o restante não precisa vir
+  de uma vez.
+- A lista de **times** fica em `useQuery` com `limit=100`. Não paginei na UI: o
+  catálogo é pequeno (o seed tem 3), e a home precisa da lista inteira no select de
+  tarefa. A API pagina; o app pede o teto.
+
+Escritas passam por `useMutation`. Depois de create/update/delete a mutation
+**invalida** a query. Dado de servidor não entra no Redux; dado de formulário não
+entra no React Query.
+
+Filtro e busca de tarefas são sempre do servidor (`teamId`, `status`, `search` na
+query string). Não filtro no cliente o que ainda não veio na página — senão a busca
+acharia só o que já estava na memória. A busca dos times na home também é do
+servidor, com debounce, pelo mesmo motivo.
 
 ## Justificativa
 
@@ -32,7 +46,7 @@ formulário não entra no React Query.
 
 - Toda chamada HTTP reutilizável mora em `src/models/` e é exposta por `src/hooks/`. A
   tela não monta `fetch` direto.
-- Não há optimistic update: a UI espera a resposta e depois invalida. Em volume maior
-  isso apareceria como atraso percebido.
+- Não há optimistic update: a UI espera a resposta e depois invalida. Pensei em colocar,
+  mas para o ciclo da avaliação preferi a lista bater com o servidor depois do 200.
 - `networkMode: 'always'` está ligado porque, no Expo, o detector de rede do React Query
   às vezes marca o app como offline mesmo com internet.

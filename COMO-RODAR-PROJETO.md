@@ -1,6 +1,7 @@
 # Como rodar o projeto
 
-Passo a passo para a primeira execução: API no Docker e app no celular pelo Expo Go.
+Passo a passo da primeira execução — a ordem em que eu mesmo subo o projeto para
+avaliar: API com seed primeiro, app no celular pelo Expo Go.
 
 ## O que você precisa
 
@@ -26,7 +27,7 @@ npm run db:migrate
 npm run seed
 ```
 
-Confira: no navegador ou no terminal, [http://localhost:3000/teams](http://localhost:3000/teams) deve devolver JSON com 3 times.
+Confira: no navegador ou no terminal, [http://localhost:3000/teams](http://localhost:3000/teams) deve devolver `{ "data": [ ...3 times... ], "meta": { "total": 3, ... } }`.
 
 A primeira vez o `db:up` constrói a imagem e pode demorar alguns minutos. A API fica em `http://localhost:3000`.
 

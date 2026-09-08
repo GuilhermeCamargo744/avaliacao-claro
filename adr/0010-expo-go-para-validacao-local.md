@@ -13,19 +13,15 @@ ou um emulador. As alternativas eram:
 - **EAS Build** — gerar um binário (preview/production ou development client) no
   [expo.dev](https://expo.dev) e instalar o artefato no aparelho.
 
-O `eas.json` já existe e o projeto já está criado no servidor da Expo
-(`projectId` em `app.json`). Daria para tratar o app como um fluxo profissional de
-entrega: fila de build, store interna, submit. Cada mudança, porém, exigiria enviar um
-build, esperar e validar de novo.
+O `eas.json` já existe e o projeto já está no Expo (`projectId` em `app.json`). Cheguei a
+configurar o caminho profissional (fila de build, store interna). Cada mudança, porém,
+exigiria enviar um build, esperar e validar de novo — tempo demais para esta atividade.
 
 ## Decisão
 
-O caminho da avaliação é **Expo Go + Metro local**. Quem valida instala o Expo Go no
-celular, sobe o bundler na máquina (`npx expo start`) e abre o app pelo QR, na mesma
-rede.
-
-O `eas.json` e o projeto no Expo permanecem no repositório, mas **não** são o fluxo de
-teste. Não enviamos builds pela EAS para validar a atividade.
+O caminho da avaliação é **Expo Go + Metro local**. Quem valida instala o Expo Go, sobe o
+bundler (`npx expo start`) e abre pelo QR, na mesma rede. Não envio build pela EAS para
+validar a atividade.
 
 ## Justificativa
 

@@ -1,7 +1,10 @@
 # ADRs — Architecture Decision Records
 
-Registro das decisões técnicas do projeto. Cada ADR é um arquivo numerado que descreve o
-contexto, a decisão tomada, a justificativa e as consequências.
+Aqui está o raciocínio que fui tomando no desenvolvimento. Cada arquivo é uma decisão:
+o que eu tinha na mesa, o que escolhi, por quê, e o que isso mudou no projeto.
+
+Quando uma decisão muda, o ADR antigo não some: o status vira `Substituído por ADR NNNN`
+e um novo arquivo entra na sequência.
 
 ## Índice
 

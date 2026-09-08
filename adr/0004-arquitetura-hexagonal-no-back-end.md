@@ -16,8 +16,8 @@ o custo de estar preso a ele é concreto, não hipotético.
 
 ## Decisão
 
-Cada módulo de domínio do back-end segue **portas e adaptadores** (arquitetura hexagonal),
-em três camadas:
+Cada módulo de domínio do back-end segue **portas e adaptadores** (arquitetura hexagonal).
+Separei em três camadas para a regra de negócio não conhecer o Prisma:
 
 ```
 src/teams/
@@ -45,4 +45,5 @@ importa `domain`, `infrastructure` importa os dois.
   quando a regra de negócio cresce ou quando o adaptador precisa mudar.
 - A porta precisa de um **token de injeção** (`TEAM_REPOSITORY`), porque interfaces do
   TypeScript não existem em tempo de execução e o Nest não consegue resolvê-las sozinho.
-- O módulo `teams` é a referência: `tasks` deve seguir a mesma divisão.
+- O módulo `teams` foi a referência; `tasks` segue a mesma divisão (`TASK_REPOSITORY` →
+  `PrismaTaskRepository`). Não quis um padrão no primeiro domínio e outro no segundo.

@@ -13,7 +13,7 @@ local — quem clona o repositório precisa chegar ao mesmo schema.
 
 ## Decisão
 
-Utilizamos **PostgreSQL 17** como banco e **Prisma Next (Prisma 8)** como camada de dados.
+Escolhi **PostgreSQL 17** como banco e **Prisma Next (Prisma 8)** como camada de dados.
 
 ## Justificativa
 
@@ -50,6 +50,13 @@ atributos do vínculo, caso apareçam depois.
 
 O schema é declarado em `src/prisma/contract.prisma`; `contract.json` e `contract.d.ts`
 são gerados por `prisma contract emit` e versionados junto.
+
+Na API a tarefa aceita `teamIds[]` (zero ou mais). No app eu deixei o formulário com
+**um time só**: o fluxo da avaliação é criar a partir de um time, e um select único
+resolve isso sem um multi-select. A lista global ainda mostra tarefa sem time e tarefa
+em dois times quando elas vêm do seed ou da API. Editar uma tarefa que o seed colocou
+em dois times grava só o primeiro da lista — recorte que eu aceitei para não montar
+multi-select nesta entrega.
 
 ## Consequências
 

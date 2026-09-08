@@ -6,17 +6,17 @@
 
 ## Contexto
 
-O Expo Router trata cada arquivo em `src/app/` como rota. Se a tela inteira morar ali,
-navegação, formulário e chamada de API ficam no mesmo arquivo — difícil de manter e fácil
-de romper a hierarquia (view falando com axios, rota carregando regra de negócio).
+O Expo Router trata cada arquivo em `src/app/` como rota. Se a tela inteira morasse ali,
+navegação, formulário e chamada de API ficariam no mesmo arquivo — difícil de manter e
+fácil de romper a hierarquia (view falando com axios, rota carregando regra de negócio).
 
 ## Decisão
 
-O app é organizado em **ecossistemas**. Cada domínio tem a sua região:
+Organizei o app em **ecossistemas**. Cada domínio tem a sua região:
 
 ```
 src/screens/teams/          criar e editar time
-src/screens/team-tasks/     listar, criar, ver e editar tarefa
+src/screens/team-tasks/     listar (global e por time), criar, ver e editar tarefa
 src/screens/home/           lista de times
 ```
 
@@ -32,10 +32,17 @@ view/            só apresentação + styles.ts
 A lógica não entra na view. A view não rompe camada: não chama API, não conhece o store.
 O `src/app/` só reexporta a tela.
 
+A lista global (`/tasks`) e a do time (`/team-tasks/[id]`) apontam para a mesma tela.
+O `id` na rota é o filtro; o select de time só aparece quando não há `id`. Não quis
+duas listas quase iguais.
+
+Formulário entra com **React Hook Form + zod** no hook (`<Controller>`). `register`
+depende de eventos de DOM e não funciona com `TextInput`.
+
 O que nasce numa tela e passa a ser usado por uma segunda **sobe** para a camada global,
 sem pular hierarquia:
 
-- `src/components/` — UI compartilhada
+- `src/components/` — UI compartilhada (`SearchField`, `TeamChip`, `SelectField`)
 - `src/hooks/` — React Query e hooks de app
 - `src/models/` — chamadas HTTP e mapeamento da API
 
@@ -51,8 +58,8 @@ sem pular hierarquia:
 
 ## Consequências
 
-- Mais arquivos por tela (quatro ou cinco em vez de um). Trade-off aceito porque as telas
-  já divergem em loading, exclusão e teclado.
+- Mais arquivos por tela (quatro ou cinco em vez de um). Aceitei porque as telas já
+  divergem em loading, exclusão, teclado e filtro.
 - Todo `.tsx` em `src/app/` vira rota — por isso o trio não mora lá.
-- Formulário em React Native usa `<Controller>`. `register` depende de eventos de DOM e
-  não funciona com `TextInput`.
+- Criar tarefa a partir da lista global ainda exige um time no form. A API aceita
+  `teamIds` vazio; o form não, de propósito.

@@ -6,16 +6,17 @@
 
 ## Contexto
 
-A API exige PostgreSQL 15 ou superior ([ADR 0003](0003-postgresql-com-prisma-next.md)), e
-a avaliação pede que o projeto suba sem erros a partir do passo a passo do README. Depender
-de um Postgres instalado na máquina de quem avalia significa versão divergente, credenciais
-diferentes e um passo manual a mais.
+A API precisa de PostgreSQL ([ADR 0003](0003-postgresql-com-prisma-next.md)), e a
+avaliação pede que o projeto suba a partir do README. Depender de um Postgres instalado
+na máquina de quem avalia significa versão divergente, credenciais diferentes e um passo
+a mais. O enunciado não fixou a versão; subi **17** (imagem `postgres:17-alpine`) porque
+é a linha atual e cobre o que o Prisma pede.
 
 ## Decisão
 
-O ambiente local sobe com **Docker Compose**: um serviço `postgres` (imagem oficial
-`postgres:17-alpine`) e um serviço `api`, construído a partir de um `Dockerfile`
-multi-stage.
+O ambiente local sobe com **Docker Compose**: serviço `postgres` (`postgres:17-alpine`) e
+serviço `api`, a partir de um `Dockerfile` multi-stage. Quem avalia não instala Postgres
+na máquina.
 
 ## Justificativa
 
