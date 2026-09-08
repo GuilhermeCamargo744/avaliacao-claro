@@ -22,6 +22,7 @@ export const useHome = () => {
         onSearchTermChange: (value: string) => dispatch(searchTermChanged(value)),
         onRetry: () => { void refetch() },
         onCreateTeam: () => router.push("/create-new-team"),
+        onOpenTasks: () => router.push("/tasks"),
         onOpenTeam: (id: string) => router.push(`/team-tasks/${id}`),
         onEditTeam: (id: string) => router.push(`/edit-team/${id}`),
     }

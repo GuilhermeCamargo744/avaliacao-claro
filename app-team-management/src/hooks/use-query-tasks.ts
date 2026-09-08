@@ -9,11 +9,10 @@ import { postTasks } from '@/models/tasks/post-tasks';
 
 const TASKS_KEY = ['tasks'];
 
-export const useTasksQuery = (teamId: string) =>
+export const useTasksQuery = (teamId?: string) =>
   useQuery({
-    queryKey: [...TASKS_KEY, { teamId }],
-    queryFn: () => getTasks({ teamId }),
-    enabled: Boolean(teamId),
+    queryKey: [...TASKS_KEY, { teamId: teamId ?? null }],
+    queryFn: () => getTasks(teamId ? { teamId } : {}),
   });
 
 export const useTaskQuery = (id: string) =>
