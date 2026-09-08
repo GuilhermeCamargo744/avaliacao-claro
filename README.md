@@ -2,10 +2,60 @@
 
 Monorepo da avaliação Claro, com o app mobile (Expo) e o back-end (NestJS).
 
+O caminho da primeira execução está abaixo. O mesmo texto vive em
+[COMO-RODAR-PROJETO.md](COMO-RODAR-PROJETO.md).
+
+## Como rodar (primeira vez)
+
+### O que você precisa
+
+- Git, Node.js 22, Docker Desktop (aberto)
+- Celular com [Expo Go](https://expo.dev/go) (mesma Wi-Fi do computador)
+- Não use o navegador (Expo Web): a API não tem CORS
+
+### 1. Clonar
+
+```bash
+git clone https://github.com/GuilhermeCamargo744/avaliacao-claro.git
+cd avaliacao-claro
+```
+
+### 2. Subir API + banco (um terminal)
+
+```bash
+cd back-end-team-management
+cp .env.example .env
+npm install
+npm run db:up
+npm run db:migrate
+npm run seed
+```
+
+Confira: no navegador ou no terminal, [http://localhost:3000/teams](http://localhost:3000/teams)
+deve devolver JSON com 3 times.
+
+### 3. Subir o app (outro terminal)
+
+```bash
+cd app-team-management
+npm install
+npx expo start
+```
+
+### 4. Abrir no celular
+
+Instale o Expo Go, leia o QR do terminal.
+Na home devem aparecer os times do seed (Produto, Engenharia, Design).
+“Todas as tarefas” lista as 10 tarefas, inclusive a sem time.
+
+Detalhes do ambiente (Docker vs `start:dev`, migrations, cURL, ADRs) ficam nas
+seções seguintes.
+
 ## Estrutura
 
 ```
 avaliacao-claro/
+├── COMO-RODAR-PROJETO.md       # Passo a passo da primeira execução
 ├── adr/                        # Registro das decisões técnicas (ADRs)
 ├── app-team-management/        # App mobile (Expo + React Native)
 └── back-end-team-management/   # API (NestJS)
