@@ -11,9 +11,8 @@ export type HomeTeamTasksViewProps = {
   isLoading: boolean;
   errorMessage: string | null;
   onBack: () => void;
-  onEditTeam: () => void;
   onCreateTask: () => void;
-  onEditTask: (taskId: string) => void;
+  onOpenTask: (taskId: string) => void;
 };
 
 export const HomeTeamTasksView = ({
@@ -21,31 +20,20 @@ export const HomeTeamTasksView = ({
   isLoading,
   errorMessage,
   onBack,
-  onEditTeam,
   onCreateTask,
-  onEditTask,
+  onOpenTask,
 }: HomeTeamTasksViewProps) => {
   const styles = homeTeamTasksStyles();
 
   return (
     <View className={styles.base()}>
-      <View className={styles.topBar()}>
-        <Pressable
-          accessibilityRole="button"
-          accessibilityLabel="Voltar"
-          onPress={onBack}
-          className={styles.backButton()}>
-          <Icon name="chevron-back" size={28} className={styles.backIcon()} />
-        </Pressable>
-
-        <Pressable
-          accessibilityRole="button"
-          accessibilityLabel="Editar time"
-          onPress={onEditTeam}
-          className={styles.editButton()}>
-          <Icon name="create-outline" size={26} className={styles.editIcon()} />
-        </Pressable>
-      </View>
+      <Pressable
+        accessibilityRole="button"
+        accessibilityLabel="Voltar"
+        onPress={onBack}
+        className={styles.backButton()}>
+        <Icon name="chevron-back" size={28} className={styles.backIcon()} />
+      </Pressable>
 
       <View className={styles.header()}>
         <Text className={styles.title()}>Tarefas</Text>
@@ -73,7 +61,7 @@ export const HomeTeamTasksView = ({
               teams={task.teams}
               description={task.description}
               status={task.status}
-              onPress={() => onEditTask(task.id)}
+              onPress={() => onOpenTask(task.id)}
             />
           ))}
         </ScrollView>

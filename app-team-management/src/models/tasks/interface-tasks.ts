@@ -50,8 +50,8 @@ export interface CreateTaskInput {
 
 export interface UpdateTaskInput {
   id: string;
-  title: string;
-  description: string;
-  status: TaskStatus;
-  teamId: string;
+  title?: string;
+  description?: string;
+  status?: TaskStatus;
+  teamId?: string;
 }
